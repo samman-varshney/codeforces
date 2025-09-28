@@ -2,7 +2,7 @@ package Unrated;
 
 import java.util.*;
 
-public class MapleandTreeBeautyEasyVersion {
+public class ReplacewithOccurrences {
     static HashMap<Long, Long> map;
     static int minHeight;
 
@@ -54,7 +54,7 @@ public class MapleandTreeBeautyEasyVersion {
     }
 
     private static void helper(ArrayList<ArrayList<Integer>> adj, int node, int height) {
-        map.put(height, map.getOrDefault(height, 0) + 1);
+        map.put((long)height, map.getOrDefault((long)height, 0L) + 1);
         if (adj.get(node).size() == 0) {
             minHeight = Math.min(height, minHeight);
         }
@@ -64,15 +64,7 @@ public class MapleandTreeBeautyEasyVersion {
     }
 
     // ---------- Data holders ----------
-    private static class Prev {
-        final int prevSum; // previous sum in dp[count-1]
-        final int index; // index of the item added to get to this sum
-
-        Prev(int prevSum, int index) {
-            this.prevSum = prevSum;
-            this.index = index;
-        }
-    }
+   
 
     private static class PrevLong {
         final long prevSum;
@@ -184,7 +176,6 @@ public class MapleandTreeBeautyEasyVersion {
     // Uses HashMap<Long, PrevLong>[] so sums can be > Integer.MAX_VALUE.
     private static List<Integer> findBestWithLongLimit(int[] arr, long limit) {
         int n = arr.length;
-        @SuppressWarnings("unchecked")
         HashMap<Long, PrevLong>[] dp = new HashMap[n + 1];
         for (int i = 0; i <= n; i++) dp[i] = new HashMap<>();
         dp[0].put(0L, new PrevLong(-1L, -1));

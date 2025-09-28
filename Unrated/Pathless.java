@@ -22,7 +22,7 @@ public class Pathless {
                 System.out.println();
             }else if( ones + 2 * twos == s){
                 System.out.println(-1);
-            }else if(ones + 2 * tows - s == 1){
+            }else if(ones + 2 * twos - s == 1){
                 
             }
         }
