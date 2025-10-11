@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class AandB {
@@ -7,29 +5,77 @@ public class AandB {
         Scanner sc = new Scanner(System.in);
         int t = sc.nextInt();
         while(t-->0){
-            solve(sc);
+            System.out.println(solve(sc));
         }
     }
 
-    private static void solve(Scanner sc) {
+    private static long solve(Scanner sc) {
         int n = sc.nextInt();
-        String s = sc.next();
-        long ans = Long.MAX_VALUE;
-        for(char c : new char[]{'a', 'b'}){
-            List<Integer> idx = new ArrayList<>();
-            for(int i = 0 ; i < n ; i++){
-                if(s.charAt(i) == c){
-                    idx.add(i);
-                }
+        char[] s = sc.next().toCharArray();
+        
+        //trying to bring all a's together
+        long costA = countMinSwaps('a', 'b', s);
+        //trying to bring all b's together
+        long costB = countMinSwaps('b', 'a', s);
+
+        return Math.min(costA, costB);
+
+    }
+
+    public static long countMinSwaps(char match, char unMatch, char[] s){
+        int n = s.length;
+        int start = n, end = -1;
+        for(int i=0; i<n; i++){
+            if(s[i] == match){
+                start = Math.min(start, i);
+                end = Math.max(end, i);
             }
-            if(idx.size() == 0) continue;
-            int mid = idx.get(idx.size() / 2);
-            long res = 0;
-            for(int i = 0 ; i < idx.size() ; i++){
-                res += Math.abs(mid + i - idx.size() / 2 - idx.get(i));
-            }
-            ans = Math.min(ans, res);
         }
-        System.out.println(ans);
+        long minOp = 0;
+        int[] left = new int[n];
+        int[] right = new int[n];
+        int last = start;
+        for(int i=start; i<end; i++){
+            if(s[i] == unMatch){
+                left[i] = i-last;
+                last++;
+            }
+        }
+        last = end;
+        for(int i=end; i>=start; i--){
+            if(s[i] == unMatch){
+                right[i] = last-i;
+                last--;
+            }
+        }
+
+        for(int i=0; i<n; i++){
+            minOp += Math.min(left[i], right[i]);
+        }
+        return minOp;
     }
 }
+
+
+// Example
+// InputCopy
+// 5
+// 4
+// abab
+// 6
+// bababa
+// 7
+// abababa
+// 2
+// ab
+// 1
+// b
+// OutputCopy
+// 1
+// 2
+// 2
+// 0
+// 0
+
+
+
