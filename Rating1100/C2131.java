@@ -42,7 +42,7 @@ public class C2131 {
 }
 
 // Example
-// InputCopy
+// InputCopya
 // 5
 // 1 3
 // 1
