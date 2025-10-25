@@ -1,6 +1,6 @@
 import java.util.*;
 import java.io.*;
-
+@SuppressWarnings("unused" )
 public class biolerplate {
 
     // -------------------------Boiler Code----------------------//
@@ -267,45 +267,84 @@ public class biolerplate {
         bw.flush();
     }
 
-    public static void print(int x) throws IOException {
+    public static void println(int x) throws IOException {
         bw.write(Integer.toString(x));
         bw.newLine();
         bw.flush();
     }
 
-    public static void print(long x) throws IOException {
+    public static void println(long x) throws IOException {
         bw.write(Long.toString(x));
         bw.newLine();
         bw.flush();
     }
 
-    public static void print(float x) throws IOException {
+    public static void println(float x) throws IOException {
         bw.write(Float.toString(x));
         bw.newLine();
         bw.flush();
     }
 
-    public static void print(double x) throws IOException {
+    public static void println(double x) throws IOException {
         bw.write(Double.toString(x));
         bw.newLine();
         bw.flush();
     }
 
-    public static void print(char x) throws IOException {
+    public static void println(char x) throws IOException {
         bw.write(x);
         bw.newLine();
         bw.flush();
     }
 
-    public static void print(boolean x) throws IOException {
+    public static void println(boolean x) throws IOException {
         bw.write(Boolean.toString(x));
         bw.newLine();
         bw.flush();
     }
 
+    public static void println() throws IOException {
+        bw.newLine();
+        bw.flush();
+    }
+
+    public static <T> void println(T obj) throws IOException {
+        bw.write(obj.toString());
+        bw.flush();
+    }
+
+    public static void print(int x) throws IOException {
+        bw.write(Integer.toString(x));
+        bw.flush();
+    }
+
+    public static void print(long x) throws IOException {
+        bw.write(Long.toString(x));
+        bw.flush();
+    }
+
+    public static void print(float x) throws IOException {
+        bw.write(Float.toString(x));
+        bw.flush();
+    }
+
+    public static void print(double x) throws IOException {
+        bw.write(Double.toString(x));
+        bw.flush();
+    }
+
+    public static void print(char x) throws IOException {
+        bw.write(x);
+        bw.flush();
+    }
+
+    public static void print(boolean x) throws IOException {
+        bw.write(Boolean.toString(x));
+        bw.flush();
+    }
+
     public static <T> void print(T obj) throws IOException {
         bw.write(obj.toString());
-        bw.newLine();
         bw.flush();
     }
 
@@ -315,13 +354,14 @@ public class biolerplate {
         try {
             int tcase = readInt();
             while (tcase-- > 0) {
-
                 
-
             }
         } catch (Exception err) {
             System.out.println(err);
         }
     }
 
+    public static void helper() throws IOException {
+        
+    }
 }
