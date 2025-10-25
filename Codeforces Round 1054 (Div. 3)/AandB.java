@@ -10,7 +10,7 @@ public class AandB {
     }
 
     private static long solve(Scanner sc) {
-        int n = sc.nextInt();
+        sc.nextInt();
         char[] s = sc.next().toCharArray();
         
         //trying to bring all a's together
