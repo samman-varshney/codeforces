@@ -382,7 +382,7 @@ public class E2167 {
             }
         }
 
-        if(end == 0)printArray(nums);else printArray(res);
+        printArray(res);
 
     }
 
@@ -394,7 +394,9 @@ public class E2167 {
         int start = 0;
         int end = nums[0]-mid;
         while(idx<k && start <= end){
-            res[idx++] = start;
+            if(idx == 0 || start != res[idx-1]){
+                res[idx++] = start;
+            }
             start++;
         }
 
@@ -402,7 +404,9 @@ public class E2167 {
             start = nums[i-1] + mid;
             end = nums[i] - mid;
             while(idx<k && start <= end){
+                if(idx == 0 || start != res[idx-1]){
                 res[idx++] = start;
+            }
                 start++;
             }
             if(idx == k){
@@ -412,7 +416,9 @@ public class E2167 {
         start = nums[n-1] + mid;
         end = x;
         while(idx<k && start <= end){
-            res[idx++] = start;
+            if(idx == 0 || start != res[idx-1]){
+                res[idx++] = start;
+            }
             start++;
         }
         
@@ -443,6 +449,8 @@ public class E2167 {
 // 8 7 9
 // 3 4 9
 // 2 0 1
+// 15 7 12
+// 8 12 9 12 7 3 3 4 11 8 1 12 1 8 9
 // OutputCopy
 // 3 
 // 0 1 2 3 4 
@@ -454,3 +462,4 @@ public class E2167 {
 // 0 
 // 0 1 2 3 
 // 6 7 8 9 
+// 0 1 2 3 4 5 6 
