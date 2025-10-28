@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
-@SuppressWarnings("unused" )
-public class biolerplate {
+
+public class F2162 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -205,17 +205,17 @@ public class biolerplate {
         }
         return arr;
     }
+
     public static int[][] read2DArray(int n, int m) throws IOException {
         int[][] arr = new int[n][m];
         for (int i = 0; i < n; i++) {
             String[] parts = br.readLine().trim().split("\\s+");
             for (int j = 0; j < m; j++) {
-                arr[i][j] = Integer.parseInt(parts[j]);
+                arr[i][j] = Integer.parseInt(parts[j])-1;
             }
         }
         return arr;
     }
-
     // --------------------print methods-----------------------//
     public static void printArray(int[] arr) throws IOException {
         for (int i = 0; i < arr.length; i++) {
@@ -364,14 +364,118 @@ public class biolerplate {
         try {
             int tcase = readInt();
             while (tcase-- > 0) {
-                
+                int[] var = readIntArray(2);
+                int n = var[0];
+                int m = var[1];
+
+                int[][] intervals = read2DArray(m, 2);
+                helper(n, m, intervals);
+
             }
         } catch (Exception err) {
             System.out.println(err);
         }
     }
 
-    public static void helper() throws IOException {
-        
+    public static void helper(int n, int m, int[][] intervals) throws IOException {
+        Arrays.sort(intervals, (a, b)->{
+            if(a[0] != b[0]){
+                return a[0]-b[0];
+            }else{
+                return a[1] - b[1];
+            }
+        });
+        HashSet<Integer> starts = new HashSet<>();
+        HashSet<Integer> ends = new HashSet<>();
+        int maxStart = Integer.MIN_VALUE, minEnd = Integer.MAX_VALUE;
+        for(int[] interval : intervals){
+            starts.add(interval[0]);
+            ends.add(interval[1]);
+            maxStart = Math.max(interval[0], maxStart);
+            minEnd = Math.min(interval[1], minEnd);
+        }
+
+        if(maxStart <= minEnd){
+
+            int i = 1;
+            for( ; i<maxStart; i++){
+                print(i+" ");
+            }
+            print(0+" ");
+            for( ; i< n; i++){
+                print(i+" ");
+            }
+            
+        }else{
+            for(int start : starts){
+                if(!ends.contains(start)){
+                    int i=2;
+                    for(; i<start; i++){
+                        print(i+" ");
+                    }
+                    print(0+" "+1+" ");
+                    for(; i<n; i++){
+                        print(i+" ");
+                    }
+                    println();
+                    return;
+                }
+            }
+
+            for(int i=1; i<m; i++){
+                if(intervals[i][0] > intervals[i-1][1] + 1){
+                    int j=1;
+                    for(; j<=intervals[i-1][1]; j++){
+                        print(j+" ");
+                    }
+                    print(0+" ");
+                    for(; j<n; j++){
+                        print(j+" ");
+                    }
+                    println();
+            
+                    return;
+                }
+            }
+
+            print("0 2 1");
+            for(int i=3; i<n; i++){
+                print(i+" ");
+            }
+        }
+        println();
     }
 }
+
+
+// Example
+// InputCopy
+// 5
+// 3 1
+// 1 2
+// 3 5
+// 1 1
+// 1 2
+// 2 2
+// 2 2
+// 2 3
+// 4 5
+// 1 2
+// 2 3
+// 3 4
+// 1 1
+// 4 4
+// 5 4
+// 3 5
+// 1 1
+// 2 4
+// 4 4
+// 4 2
+// 1 3
+// 2 4
+// OutputCopy
+// 2 0 1
+// 2 1 0 
+// 0 2 1 3 
+// 2 0 1 3 4 
+// 3 1 0 2

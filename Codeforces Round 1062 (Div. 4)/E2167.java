@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
-@SuppressWarnings("unused" )
-public class biolerplate {
+
+public class E2167 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -205,16 +205,6 @@ public class biolerplate {
         }
         return arr;
     }
-    public static int[][] read2DArray(int n, int m) throws IOException {
-        int[][] arr = new int[n][m];
-        for (int i = 0; i < n; i++) {
-            String[] parts = br.readLine().trim().split("\\s+");
-            for (int j = 0; j < m; j++) {
-                arr[i][j] = Integer.parseInt(parts[j]);
-            }
-        }
-        return arr;
-    }
 
     // --------------------print methods-----------------------//
     public static void printArray(int[] arr) throws IOException {
@@ -364,14 +354,103 @@ public class biolerplate {
         try {
             int tcase = readInt();
             while (tcase-- > 0) {
-                
+                int[] var = readIntArray(3);
+                int n = var[0];
+                int k = var[1];
+                int x = var[2];
+                int[] nums = readIntArray(n);
+
+                helper(n, k, x, nums);
             }
         } catch (Exception err) {
             System.out.println(err);
         }
     }
 
-    public static void helper() throws IOException {
+    public static void helper(int n, int k, int x, int[] nums) throws IOException {
+        Arrays.sort(nums);
+        int start = 0, end = x;
+        int[] res = new int[k];
+        while(start <= end){
+            int mid = start + (end - start)/2;
+            int[] list = possible(n, k, x, nums, mid);
+            if(list[k-1] != -1){
+                res = list;
+                start = mid+1;
+            }else{
+                end = mid-1;
+            }
+        }
+
+        if(end == 0)printArray(nums);else printArray(res);
+
+    }
+
+    public static int[] possible(int n, int k, int x, int[] nums, int mid) throws IOException{
+        int[] res = new int[k];
+        Arrays.fill(res, -1);
+        int idx = 0;
+
+        int start = 0;
+        int end = nums[0]-mid;
+        while(idx<k && start <= end){
+            res[idx++] = start;
+            start++;
+        }
+
+        for(int i=1; i<n; i++){
+            start = nums[i-1] + mid;
+            end = nums[i] - mid;
+            while(idx<k && start <= end){
+                res[idx++] = start;
+                start++;
+            }
+            if(idx == k){
+                return res;
+            }
+        }
+        start = nums[n-1] + mid;
+        end = x;
+        while(idx<k && start <= end){
+            res[idx++] = start;
+            start++;
+        }
         
+        return res;
     }
 }
+
+// Example
+// InputCopy
+// 10
+// 4 1 4
+// 1 0 2 4
+// 5 5 4
+// 0 1 2 3 4
+// 2 1 4
+// 4 0
+// 3 4 6
+// 2 4 3
+// 3 2 12
+// 6 12 0
+// 4 3 12
+// 8 12 0 4
+// 1 1 1000000000
+// 0
+// 1 1 1000000000
+// 1000000000
+// 3 4 9
+// 8 7 9
+// 3 4 9
+// 2 0 1
+// OutputCopy
+// 3 
+// 0 1 2 3 4 
+// 2 
+// 0 1 5 6 
+// 3 9 
+// 2 6 10 
+// 1000000000 
+// 0 
+// 0 1 2 3 
+// 6 7 8 9 
