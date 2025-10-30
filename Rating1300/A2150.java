@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
-@SuppressWarnings("unused" )
-public class biolerplate {
+
+public class A2150 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -205,16 +205,6 @@ public class biolerplate {
         }
         return arr;
     }
-    public static int[][] read2DArray(int n, int m) throws IOException {
-        int[][] arr = new int[n][m];
-        for (int i = 0; i < n; i++) {
-            String[] parts = br.readLine().trim().split("\\s+");
-            for (int j = 0; j < m; j++) {
-                arr[i][j] = Integer.parseInt(parts[j]);
-            }
-        }
-        return arr;
-    }
 
     // --------------------print methods-----------------------//
     public static void printArray(int[] arr) throws IOException {
@@ -320,7 +310,6 @@ public class biolerplate {
 
     public static <T> void println(T obj) throws IOException {
         bw.write(obj.toString());
-        bw.newLine();
         bw.flush();
     }
 
@@ -365,14 +354,72 @@ public class biolerplate {
         try {
             int tcase = readInt();
             while (tcase-- > 0) {
-                
+                int[] var = readIntArray(2);
+                int n = var[0];
+                int m = var[1];
+                String s = readString();
+                int[] nums = readIntArray(m);
+
+                helper(n, m, s.toCharArray(), nums);
             }
         } catch (Exception err) {
             System.out.println(err);
         }
     }
 
-    public static void helper() throws IOException {
-        
+    public static void helper(int n, int m, char[] s, int[] nums) throws IOException {
+        HashSet<Integer> set = new HashSet<>();
+        TreeSet<Integer> res = new TreeSet<>();
+        for(int i=0; i<m; i++){
+           set.add(nums[i]);
+           res.add(nums[i]);
+        }
+        int pos = 1;
+        for(int i=0; i<n; i++){
+            if(s[i] == 'A'){
+                pos++;
+            }else{
+                while(set.contains(++pos));
+            }
+            res.add(pos);
+            if(s[i] == 'B'){
+                while(set.contains(++pos));
+            }
+        }
+        println(res.size());
+        for(int i : res){
+           print(i+" ");
+        }
+        println();
     }
 }
+
+// Example
+// InputCopy
+// 5
+// 3 2
+// BAB
+// 2 5
+// 3 4
+// ABA
+// 1 4 9 10
+// 5 2
+// ABABB
+// 1 7
+// 3 1
+// BBA
+// 6
+// 1 4
+// A
+// 1 3 4 1000000000
+// OutputCopy
+// 4
+// 2 3 5 6 
+// 7
+// 1 2 3 4 6 9 10 
+// 7
+// 1 2 3 5 6 7 9 
+// 3
+// 2 4 6 
+// 5
+// 1 2 3 4 1000000000 

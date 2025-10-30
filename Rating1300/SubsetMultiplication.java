@@ -1,4 +1,3 @@
-package Rating1300;
 
 import java.util.Scanner;
 public class SubsetMultiplication {

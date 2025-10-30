@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
-@SuppressWarnings("unused" )
-public class biolerplate {
+
+public class C2146 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -205,16 +205,6 @@ public class biolerplate {
         }
         return arr;
     }
-    public static int[][] read2DArray(int n, int m) throws IOException {
-        int[][] arr = new int[n][m];
-        for (int i = 0; i < n; i++) {
-            String[] parts = br.readLine().trim().split("\\s+");
-            for (int j = 0; j < m; j++) {
-                arr[i][j] = Integer.parseInt(parts[j]);
-            }
-        }
-        return arr;
-    }
 
     // --------------------print methods-----------------------//
     public static void printArray(int[] arr) throws IOException {
@@ -365,14 +355,77 @@ public class biolerplate {
         try {
             int tcase = readInt();
             while (tcase-- > 0) {
-                
+                int n = readInt();
+                char[] s = readString().toCharArray();
+                helper(n, s);
             }
         } catch (Exception err) {
             System.out.println(err);
         }
     }
 
-    public static void helper() throws IOException {
-        
+    public static void helper(int n, char[] s) throws IOException {
+        int prev = -1;
+        int[] res = new int[n];
+        int j = 0;
+        for(int i=0; i<n; i++){
+            if(s[i] == '1'){
+                int diff = i - prev - 1;
+                if(diff == 1){
+                    println("NO");
+                    return;
+                }else{
+                    int dummy = i;
+                    while( j < i ){
+                        res[j] = dummy;
+                        dummy--;
+                        j++;
+                    }
+                    res[j++] = i+1; 
+                }
+                prev = i;
+            }
+        }
+        int diff = n - prev -1;
+        if(diff == 1){
+            println("NO");
+            return ;
+        }
+        int dummy = n;
+        while( j < n ){
+            res[j] = dummy;
+            dummy--;
+            j++;
+        } 
+
+        println("YES");
+        printArray(res);
     }
 }
+
+// Example
+// InputCopy
+// 6
+// 3
+// 111
+// 5
+// 00000
+// 5
+// 10100
+// 7
+// 0010000
+// 11
+// 00001001100
+// 12
+// 011100010000
+// OutputCopy
+// YES
+// 1 2 3 
+// YES
+// 2 4 3 5 1
+// NO
+// YES
+// 2 1 3 5 7 6 4
+// YES
+// 2 1 4 3 5 7 6 8 9 11 10
+// NO
