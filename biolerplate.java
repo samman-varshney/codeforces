@@ -277,6 +277,14 @@ public class biolerplate {
         bw.flush();
     }
 
+    public static <T> void printList(List<T> list) throws IOException {
+        for (T element : list) {
+            bw.write(element + " ");
+        }
+        bw.newLine(); // move to next line after printing the list
+        bw.flush();   // ensure all data is written to output
+    }
+
     public static void println(int x) throws IOException {
         bw.write(Integer.toString(x));
         bw.newLine();

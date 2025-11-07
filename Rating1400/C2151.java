@@ -1,7 +1,8 @@
+package Rating1400;
 import java.util.*;
 import java.io.*;
 
-public class C {
+public class C2151 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -267,6 +268,14 @@ public class C {
         bw.flush();
     }
 
+    public static <T> void printList(List<T> list) throws IOException {
+        for (T element : list) {
+            bw.write(element + " ");
+        }
+        bw.newLine(); // move to next line after printing the list
+        bw.flush();   // ensure all data is written to output
+    }
+
     public static void println(int x) throws IOException {
         bw.write(Integer.toString(x));
         bw.newLine();
@@ -349,75 +358,76 @@ public class C {
         bw.flush();
     }
 
+    
+
     // -----------------------------------------------------//
 
     public static void main(String[] args) {
         try {
             int tcase = readInt();
             while (tcase-- > 0) {
-                int[] var = readIntArray(2);
-                long[] nums = readLongArray(var[0]);
-                helper(var[0], var[1], nums);
+                int n = readInt();
+                long[] nums = readLongArray(n);
+                helper(n, nums);
             }
         } catch (Exception err) {
             System.out.println(err);
         }
     }
 
-    public static void helper(int n, int x, long[] nums) throws IOException {
-        Arrays.sort(nums);
-        long bonus = 0;
-        long sum = 0;
-        long lf = 0;
-        int i=0, j=n-1;
-        long[] res = new long[n];
-        int k = 0;
-        while(i<=j){
-            if((sum+nums[j])/x > lf){
-                res[k++] = nums[j];
-                sum += nums[j];
-                lf = sum/x;
-                bonus += nums[j];
-                j--;
-            }else{
-                sum+= nums[i];
-                res[k++] = nums[i];
-                i++;
-            }
+    public static void helper(int n, long[] nums) throws IOException {
+        long[] prefix1 = new long[n];
+        long[] prefix2 = new long[n];
+
+        long prev = 0;
+        for(int i=1; i<n; i+=2){
+            prefix1[i] = prev + nums[i] - nums[i-1];
+            prefix1[i-1] = prefix1[i];
+            prev = prefix1[i];
         }
-        println(bonus);
-        printArray(res);
+
+        prev = 0;
+        for(int i=2; i<n; i+=2){
+            prefix2[i] = prev + nums[i] - nums[i-1];
+            prefix2[i-1] = prefix2[i];
+            prev = prefix2[i];
+        }
+
+        List<List<Long>> res = new ArrayList<>();
+        res.add(new ArrayList<>());
+        res.get(0).add(prefix1[n-1]);
+
+        for(int i=2; i<=n; i++){
+            long ans = 0;
+            for(int k=0; k<i; k++){
+                ans += nums[n-k-1] - nums[k];
+            }
+            if( i%2 != 0){
+                ans += prefix1[n-i] - prefix1[i-2] ;
+            }else{
+                ans += prefix2[n-i] - prefix2[i-2];
+            }
+            res.add(new ArrayList<>());
+            res.get(i-1).add(ans);
+        }
+
+        for(int i=0; i<n; i++){
+            printList(res.get(i));
+        }
     }
 }
 
+
 // Example
 // InputCopy
-// 7
-// 10 2
-// 1 2 1 2 1 2 1 2 1 2
-// 5 10
-// 2 2 2 2 5
-// 11 23
-// 5 5 22 1 21 2 10 3 1 1 2
-// 1 1
+// 3
 // 1
-// 1 17
-// 11
-// 3 100
-// 44 32 1
-// git
+// 32 78
+// 2
+// 4 5 6 9
+// 4
+// 6149048 26582657 36124499 43993239 813829899 860114890 910238130 913669539
 // OutputCopy
-// 12
-// 1 2 2 2 2 2 1 1 1 1
-// 5
-// 2 2 2 2 5
-// 53
-// 1 1 5 2 1 2 5 3 10 21 22
-// 1
-// 1
-// 0
-// 11
-// 0
-// 44 32 1
-// 503499
-// 53473 42894 80 57156 42801 61369 42217 63370 29316 68791 27290 73112 24273 84405 21871 95296
+// 46 
+// 4 6 
+// 78018749 1737022233 1845329695 3385003015 
