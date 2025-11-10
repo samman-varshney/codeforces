@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
 @SuppressWarnings("unused" )
-public class biolerplate {
+public class C2124 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -393,6 +393,9 @@ public class biolerplate {
         try {
             int tcase = readInt();
             while (tcase-- > 0) {
+                int n = readInt();
+                long[] nums = readLongArray(n);
+                helper(n, nums);
                 
             }
         } catch (Exception err) {
@@ -400,7 +403,28 @@ public class biolerplate {
         }
     }
 
-    public static void helper() throws IOException {
-        
+    public static void helper(int n, long[] nums) throws IOException {
+        long res = 1;
+        for(int i=0; i<n-1; i++){
+            res = lcm(res, nums[i]/(gcd(nums[i], nums[i+1])));
+        }
+        println(res);
     }
 }
+
+// Example
+// InputCopy
+// 4
+// 2
+// 2 4
+// 3
+// 1 1000000000 500000000
+// 4
+// 4 8 4 8
+// 7
+// 42 42 14 84 28 73080 255780
+// OutputCopy
+// 343
+// 2
+// 4
+// 6

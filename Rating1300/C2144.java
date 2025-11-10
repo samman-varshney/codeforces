@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
 @SuppressWarnings("unused" )
-public class biolerplate {
+public class C2144 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -146,9 +146,9 @@ public class biolerplate {
     }
 
     // gcd of two numbers
-    public static long gcd(long a, long b) {
+    public static int gcd(int a, int b) {
         while (b != 0) {
-            long temp = b; 
+            int temp = b;
             b = a % b;
             a = temp;
         }
@@ -156,7 +156,7 @@ public class biolerplate {
     }
 
     // lcm of two numbers
-    public static long lcm(long a, long b) {
+    public static int lcm(int a, int b) {
         return (a * b) / gcd(a, b);
     }
 
@@ -285,18 +285,6 @@ public class biolerplate {
         bw.flush();
     }
 
-    public static <T extends Number> int getMSBPosition(T num) {
-        long n = num.longValue();
-        if (n == 0) return -1; // No set bit
-
-        int pos = 0;
-        while (n > 0) {
-            n >>= 1;
-            pos++;
-        }
-        return pos - 1; // Zero-based index
-    }
-
     public static <T> void printList(List<T> list) throws IOException {
         for (T element : list) {
             bw.write(element + " ");
@@ -393,14 +381,54 @@ public class biolerplate {
         try {
             int tcase = readInt();
             while (tcase-- > 0) {
-                
+                int n = readInt();
+                int[] nums1 = readIntArray(n);
+                int[] nums2 = readIntArray(n);
+
+                helper(n, nums1, nums2);
             }
         } catch (Exception err) {
             System.out.println(err);
         }
     }
 
-    public static void helper() throws IOException {
-        
+    public static void helper(int n, int[] nums1, int[] nums2) throws IOException {
+        int mod = 998244353;
+        for(int i=0; i<n; i++){
+            int min = min(nums1[i], nums2[i]);
+            int max = max(nums1[i], nums2[i]);
+
+            nums1[i] = max;
+            nums2[i] = min;
+        }
+
+        long[] dp = new long[n+1];
+        // dp[n] = 1;
+        for(int i=n-1; i>=0; i--){
+            if(i==0 || (nums1[i] >= nums2[i-1] && nums2[i] >= nums1[i-1])){
+                dp[i] = (1+2*dp[i+1])%mod;
+            }else{
+                dp[i] = dp[i+1];
+            }
+        }
+
+        println(dp[0]+1);
     }
 }
+
+// Example
+// InputCopy
+// 3
+// 3
+// 2 1 4
+// 1 3 2
+// 1
+// 4
+// 4
+// 5
+// 2 3 3 4 4
+// 1 1 3 5 6
+// OutputCopy
+// 2
+// 2
+// 8

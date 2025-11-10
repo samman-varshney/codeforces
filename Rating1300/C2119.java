@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
 @SuppressWarnings("unused" )
-public class biolerplate {
+public class C2119 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -146,9 +146,9 @@ public class biolerplate {
     }
 
     // gcd of two numbers
-    public static long gcd(long a, long b) {
+    public static int gcd(int a, int b) {
         while (b != 0) {
-            long temp = b; 
+            int temp = b;
             b = a % b;
             a = temp;
         }
@@ -156,7 +156,7 @@ public class biolerplate {
     }
 
     // lcm of two numbers
-    public static long lcm(long a, long b) {
+    public static int lcm(int a, int b) {
         return (a * b) / gcd(a, b);
     }
 
@@ -284,8 +284,7 @@ public class biolerplate {
         bw.newLine();
         bw.flush();
     }
-
-    public static <T extends Number> int getMSBPosition(T num) {
+     public static <T extends Number> int getMSBPosition(T num) {
         long n = num.longValue();
         if (n == 0) return -1; // No set bit
 
@@ -393,14 +392,53 @@ public class biolerplate {
         try {
             int tcase = readInt();
             while (tcase-- > 0) {
-                
+                long[] arr = readLongArray(4);
+                helper(arr[0], arr[1], arr[2], arr[3]);
             }
         } catch (Exception err) {
             System.out.println(err);
         }
     }
 
-    public static void helper() throws IOException {
+    public static void helper(long n, long l, long r, long k) throws IOException {
+        if((n&1) == 1){
+            println(l);
+            return;
+        }
+        int m1 = getMSBPosition(l);
+        int m2 = getMSBPosition(r);
+        if(n == 2 || m1 >= m2){
+            println(-1);
+            return;
+        }
+        if(k<=n-2){
+            println(l);
+            return;
+        }
+        println(1L<<(m1+1L));
         
     }
 }
+
+// Example
+// InputCopy
+// 9
+// 1 4 4 1
+// 3 1 3 3
+// 4 6 9 2
+// 4 6 9 3
+// 4 6 7 4
+// 2 5 5 1
+// 2 3 6 2
+// 999999999999999999 1000000000000000000 1000000000000000000 999999999999999999
+// 1000000000000000000 1 999999999999999999 1000000000000000000
+// OutputCopy
+// 4
+// 1
+// 6
+// 8
+// -1
+// -1
+// -1
+// 1000000000000000000
+// 2
