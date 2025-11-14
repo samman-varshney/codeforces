@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
 @SuppressWarnings("unused" )
-public class biolerplate {
+public class C2169 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -133,7 +133,7 @@ public class biolerplate {
 
     // upper bound of an array
     public static int upperBound(int[] nums, int val) {
-        int start = 0, end = nums.length-1;
+        int start = 0, end = nums.length;
         while (start <= end) {
             int mid = start + (end - start) / 2;
             if (nums[mid] >= val) {
@@ -393,14 +393,58 @@ public class biolerplate {
         try {
             int tcase = readInt();
             while (tcase-- > 0) {
-                
+                int n = readInt();
+                int[] nums = readIntArray(n);
+                helper(n, nums);
             }
         } catch (Exception err) {
             System.out.println(err);
         }
     }
 
-    public static void helper() throws IOException {
-        
+    public static void helper(int n, int[] nums) throws IOException {
+        long[] prefix = new long[n+1];
+        for(int i=1; i<=n; i++){
+            prefix[i] = prefix[i-1]+nums[i-1];
+        }
+
+        int[] dp = new int[n];
+        long[] profit = new long[n];
+
+        dp[0] = 0;
+        profit[0] = 2 - nums[0];
+        long maxGain = Math.max(0, profit[0]);
+        for(int i=1; i<n; i++){
+            long point = 2L*i+2L - nums[i];
+            long range = (i - dp[i-1]+1L)*(i+dp[i-1]+2L) - (prefix[i+1] - prefix[dp[i-1]]);
+
+            if(point > range){
+                dp[i] = i;
+                profit[i] = point;
+            }else{
+                dp[i] = dp[i-1];
+                profit[i] = range;
+            }
+            maxGain = Math.max(maxGain, profit[i]);
+        }
+        println(maxGain+prefix[n]);
+
     }
 }
+
+// Example
+// InputCopy
+// 4
+// 3
+// 2 5 1
+// 2
+// 4 4
+// 4
+// 1 3 2 1
+// 5
+// 3 2 0 9 10
+// OutputCopy
+// 13
+// 8
+// 20
+// 32

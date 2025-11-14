@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
 @SuppressWarnings("unused" )
-public class biolerplate {
+public class A {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -133,7 +133,7 @@ public class biolerplate {
 
     // upper bound of an array
     public static int upperBound(int[] nums, int val) {
-        int start = 0, end = nums.length-1;
+        int start = 0, end = nums.length;
         while (start <= end) {
             int mid = start + (end - start) / 2;
             if (nums[mid] >= val) {
@@ -393,14 +393,35 @@ public class biolerplate {
         try {
             int tcase = readInt();
             while (tcase-- > 0) {
-                
+                int[] var = readIntArray(2);
+                int[] nums = readIntArray(var[0]);
+                helper(var[0], var[1], nums);
             }
         } catch (Exception err) {
             System.out.println(err);
         }
     }
 
-    public static void helper() throws IOException {
-        
+    public static void helper(int n, int a, int[] nums) throws IOException {
+        Arrays.sort(nums);
+        int left = lowerBound(nums, a-1);
+        int right = upperBound(nums, a+1);
+
+        println(left+1 > n - right? a-1:a+1);
+
     }
 }
+
+// Example
+// InputCopy
+// 3
+// 7 21
+// 10 20 30 40 50 60 70
+// 6 500
+// 200 200 300 500 600 600
+// 2 7
+// 7 7
+// OutputCopy
+// 35
+// 333
+// 1337

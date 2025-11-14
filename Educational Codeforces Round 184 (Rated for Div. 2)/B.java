@@ -1,7 +1,8 @@
 import java.util.*;
 import java.io.*;
-@SuppressWarnings("unused" )
-public class biolerplate {
+
+@SuppressWarnings("unused")
+public class B {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -133,7 +134,7 @@ public class biolerplate {
 
     // upper bound of an array
     public static int upperBound(int[] nums, int val) {
-        int start = 0, end = nums.length-1;
+        int start = 0, end = nums.length - 1;
         while (start <= end) {
             int mid = start + (end - start) / 2;
             if (nums[mid] >= val) {
@@ -148,7 +149,7 @@ public class biolerplate {
     // gcd of two numbers
     public static long gcd(long a, long b) {
         while (b != 0) {
-            long temp = b; 
+            long temp = b;
             b = a % b;
             a = temp;
         }
@@ -213,6 +214,7 @@ public class biolerplate {
         }
         return arr;
     }
+
     public static int[][] read2DArray(int n, int m) throws IOException {
         int[][] arr = new int[n][m];
         for (int i = 0; i < n; i++) {
@@ -287,7 +289,8 @@ public class biolerplate {
 
     public static <T extends Number> int getMSBPosition(T num) {
         long n = num.longValue();
-        if (n == 0) return -1; // No set bit
+        if (n == 0)
+            return -1; // No set bit
 
         int pos = 0;
         while (n > 0) {
@@ -301,8 +304,8 @@ public class biolerplate {
         for (T element : list) {
             bw.write(element + " ");
         }
-        bw.newLine(); 
-        bw.flush();   
+        bw.newLine();
+        bw.flush();
     }
 
     public static void println(int x) throws IOException {
@@ -393,14 +396,97 @@ public class biolerplate {
         try {
             int tcase = readInt();
             while (tcase-- > 0) {
-                
+                helper(readString().toCharArray());
             }
         } catch (Exception err) {
             System.out.println(err);
         }
     }
+    public static boolean patternGTLT(char[] arr) {
+    boolean seenGT = false;
 
-    public static void helper() throws IOException {
-        
+    for (char c : arr) {
+        if (c == '>') seenGT = true;
+        if (seenGT && c == '<') return true;
+    }
+    return false;
+}
+
+
+    public static boolean patternGTStar(char[] arr) {
+        boolean seenGT = false;
+
+        for (char c : arr) {
+            if (c == '>')
+                seenGT = true;
+            if (seenGT && c == '*')
+                return true;
+        }
+        return false;
+    }
+
+    public static boolean patternStarLT(char[] arr) {
+        boolean seenStar = false;
+
+        for (char c : arr) {
+            if (c == '*')
+                seenStar = true;
+            if (seenStar && c == '<')
+                return true;
+        }
+        return false;
+    }
+
+    public static boolean patternDoubleStar(char[] arr) {
+        boolean seenStar = false;
+
+        for (char c : arr) {
+            if (c == '*') {
+                if (seenStar)
+                    return true;
+                seenStar = true;
+            }
+        }
+        return false;
+    }
+
+    public static void helper(char[] s) throws IOException {
+        if (s.length == 1) {
+            println(1);
+            return;
+        }
+
+        if(patternDoubleStar(s) || patternGTStar(s) || patternStarLT(s) || patternGTLT(s)){
+            println(-1);
+            return;
+        }
+
+        int gt = 0;
+        int lt = 0;
+        int star = 0;
+
+        for(char c : s){
+            if(c == '*'){
+                star++;
+            }else if(c == '>'){
+                gt++;
+            }else{
+                lt++;
+            }
+        }
+        println(Math.max(gt, lt)+star);
     }
 }
+
+// Example
+// InputCopy
+// 4
+// *****
+// <<<>
+// >*<
+// *
+// OutputCopy
+// -1
+// 3
+// -1
+// 1

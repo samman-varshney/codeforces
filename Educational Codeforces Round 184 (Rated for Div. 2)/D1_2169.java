@@ -1,7 +1,8 @@
 import java.util.*;
 import java.io.*;
-@SuppressWarnings("unused" )
-public class biolerplate {
+
+@SuppressWarnings("unused")
+public class D1_2169 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -133,7 +134,7 @@ public class biolerplate {
 
     // upper bound of an array
     public static int upperBound(int[] nums, int val) {
-        int start = 0, end = nums.length-1;
+        int start = 0, end = nums.length;
         while (start <= end) {
             int mid = start + (end - start) / 2;
             if (nums[mid] >= val) {
@@ -148,7 +149,7 @@ public class biolerplate {
     // gcd of two numbers
     public static long gcd(long a, long b) {
         while (b != 0) {
-            long temp = b; 
+            long temp = b;
             b = a % b;
             a = temp;
         }
@@ -213,6 +214,7 @@ public class biolerplate {
         }
         return arr;
     }
+
     public static int[][] read2DArray(int n, int m) throws IOException {
         int[][] arr = new int[n][m];
         for (int i = 0; i < n; i++) {
@@ -287,7 +289,8 @@ public class biolerplate {
 
     public static <T extends Number> int getMSBPosition(T num) {
         long n = num.longValue();
-        if (n == 0) return -1; // No set bit
+        if (n == 0)
+            return -1; // No set bit
 
         int pos = 0;
         while (n > 0) {
@@ -301,8 +304,8 @@ public class biolerplate {
         for (T element : list) {
             bw.write(element + " ");
         }
-        bw.newLine(); 
-        bw.flush();   
+        bw.newLine();
+        bw.flush();
     }
 
     public static void println(int x) throws IOException {
@@ -393,14 +396,58 @@ public class biolerplate {
         try {
             int tcase = readInt();
             while (tcase-- > 0) {
-                
+                long[] var = readLongArray(3);
+                helper(var[0], var[1], var[2]);
             }
         } catch (Exception err) {
             System.out.println(err);
         }
     }
 
-    public static void helper() throws IOException {
+    public static void helper(long x, long y, long k) throws IOException {
+        long start = 1, end = 1000000000000L;
+
+        while (start <= end) {
+            long mid = start + (end - start) / 2;
+            long count = getCount(mid, x, y);
+            if (count >= k) {
+                end = mid - 1;
+            } else {
+                start = mid + 1;
+            }
+        }
+
         
+        if (start >=1L && start<=1000000000000L && getCount(start, x, y) == k)
+            println(start);
+        else
+            println(-1);
+
+    }
+
+    public static long getCount(long range, long x, long y) {
+
+        while (x > 0 && range > 0) {
+            range -= range / y;
+            x--;
+        }
+        return range;
     }
 }
+
+// Example
+// InputCopy
+// 6
+// 2 3 5
+// 2 5 1
+// 20 2 1000000000000
+// 175 10 28
+// 100000 998244353 1999999999
+// 1 1 1
+// OutputCopy
+// 10
+// 1
+// -1
+// 2339030304
+// 2000199999
+// -1

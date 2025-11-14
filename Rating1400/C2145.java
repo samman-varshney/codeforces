@@ -1,7 +1,9 @@
+package Rating1400;
+
 import java.util.*;
 import java.io.*;
 @SuppressWarnings("unused" )
-public class biolerplate {
+public class C2145 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -133,7 +135,7 @@ public class biolerplate {
 
     // upper bound of an array
     public static int upperBound(int[] nums, int val) {
-        int start = 0, end = nums.length-1;
+        int start = 0, end = nums.length;
         while (start <= end) {
             int mid = start + (end - start) / 2;
             if (nums[mid] >= val) {
@@ -393,14 +395,100 @@ public class biolerplate {
         try {
             int tcase = readInt();
             while (tcase-- > 0) {
-                
+                int n = readInt();
+                char[] s = readString().toCharArray();
+                helper(n, s);
             }
         } catch (Exception err) {
             System.out.println(err);
         }
     }
 
-    public static void helper() throws IOException {
+    public static void helper(int n , char[] s) throws IOException {
+        int[] prefixA = new int[n+1];
+        int[] prefixB = new int[n+1];
+        int[] suffixA = new int[n+1];
+        int[] suffixB = new int[n+1];
+
         
+        for(int i=1; i<n; i++){
+            if(s[i] == 'a'){
+                prefixA[i] = prefixA[i-1]+1;
+                prefixB[i] = prefixB[i-1];
+            }else{
+                prefixA[i] = prefixA[i-1];
+                prefixB[i] = prefixB[i-1]+1;
+            }
+        }
+        for(int i=n-1; i>=0; i--){
+            if(s[i] == 'a'){
+                prefixA[i] = prefixA[i+1]+1;
+                prefixB[i] = prefixB[i+1];
+            }else{
+                prefixA[i] = prefixA[i+1];
+                prefixB[i] = prefixB[i+1]+1;
+            }
+        }
+        if(prefixA[n] == prefixB[n]){
+            println(0);
+            return;
+        }
+
+        for(int i=n-1; i>=0; i--){
+            int a = suffixA[i];
+            int b = suffixB[i];
+
+              
+
+        }
+    }
+    private static boolean possible(int window, char[] s, int a, int b){
+        int n = s.length;
+        for(int i=0; i<window; i++){
+            if(s[i] == 'a')
+                a--;
+            else
+                b--;
+        }
+        if(a == b){
+            return true;
+        }
+        int j = 0;
+        for(int i=window; i<n; i++){
+            if(s[j] == 'a')
+                a++;
+            else
+                b++;
+            j++;
+            if(s[i] == 'a')
+                a--;
+            else
+                b--;
+            if(a == b){
+                return true;
+            }
+            
+        }
+        return false;
     }
 }
+
+// Example
+// InputCopy
+// 5
+// 5
+// bbbab
+// 6
+// bbaaba
+// 4
+// aaaa
+// 12
+// aabbaaabbaab
+// 5
+// aabaa
+// OutputCopy
+// 3
+// 0
+// -1
+// 2
+// -1
