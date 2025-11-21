@@ -2,7 +2,7 @@ import java.util.*;
 import java.io.*;
 
 @SuppressWarnings("unused")
-public class C2171 {
+public class C1_2171 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
