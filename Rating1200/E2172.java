@@ -1,8 +1,10 @@
+package Rating1200;
+
 import java.util.*;
 import java.io.*;
 
 @SuppressWarnings("unused")
-public class biolerplate {
+public class E2172 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -395,8 +397,45 @@ public class biolerplate {
     public static void main(String[] args) {
         try {
             int tcase = readInt();
-            while (tcase-- > 0) {
+            HashMap<Integer, String[]> data = new HashMap<>();
+            data.put(12, new String[] {
+                    "12",
+                    "21"
+            });
+            data.put(123, new String[] { "123",
+                    "132",
+                    "213",
+                    "231",
+                    "312",
+                    "321" });
+            data.put(1234, new String[] { "1234",
+                    "1243",
+                    "1324",
+                    "1342",
+                    "1423",
+                    "1432",
+                    "2134",
+                    "2143",
+                    "2314",
+                    "2341",
+                    "2413",
+                    "2431",
+                    "3124",
+                    "3142",
+                    "3214",
+                    "3241",
+                    "3412",
+                    "3421",
+                    "4123",
+                    "4132",
+                    "4213",
+                    "4231",
+                    "4312",
+                    "4321" });
 
+            while (tcase-- > 0) {
+                int[] var = readIntArray(3);
+                helper(var[0], var[1], var[2], data);
             }
         } catch (Exception err) {
             System.err.println("An unexpected error occurred:");
@@ -404,7 +443,25 @@ public class biolerplate {
         }
     }
 
-    public static void helper() throws IOException {
+    public static void helper(int n, int j, int k,  HashMap<Integer, String[]> data) throws IOException {
+        String s1 = data.get(n)[j-1];
+        String s2 = data.get(n)[k-1];
 
+        HashSet<Character> set = new HashSet<>();
+        for(int i = 0; i<s1.length(); i++)
+            set.add(s1.charAt(i));
+        int y = 0;
+        for(int i=0; i<s2.length(); i++){
+            if(set.contains(s2.charAt(i)))
+                y++;
+        }
+        int x = 0;
+        for(int i = 0; i<s1.length(); i++){
+            if(s1.charAt(i) == s2.charAt(i))
+                x++;
+        }
+        
+        println(x+"A"+(y-x)+"B");
+        
     }
 }

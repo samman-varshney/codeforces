@@ -2,7 +2,7 @@ import java.util.*;
 import java.io.*;
 
 @SuppressWarnings("unused")
-public class biolerplate {
+public class M2172 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -134,7 +134,7 @@ public class biolerplate {
 
     // upper bound of an array
     public static int upperBound(int[] nums, int val) {
-        int start = 0, end = nums.length - 1;
+        int start = 0, end = nums.length;
         while (start <= end) {
             int mid = start + (end - start) / 2;
             if (nums[mid] >= val) {
@@ -394,9 +394,13 @@ public class biolerplate {
 
     public static void main(String[] args) {
         try {
-            int tcase = readInt();
+            int tcase = 1;
             while (tcase-- > 0) {
+                int[] var = readIntArray(3);
+                int[] products = readIntArray(var[0]);
+                int[][] edges = read2DArray(var[1], 2);
 
+                helper(var[0], var[1], var[2], products, edges);
             }
         } catch (Exception err) {
             System.err.println("An unexpected error occurred:");
@@ -404,7 +408,56 @@ public class biolerplate {
         }
     }
 
-    public static void helper() throws IOException {
+    public static void helper(int n, int m, int k, int[] products, int[][] edges) throws IOException {
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i <= n; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int[] edg : edges) {
+            adj.get(edg[0]).add(edg[1]);
+            adj.get(edg[1]).add(edg[0]);
+        }
+        int[] dist = new int[n + 1];
+        Arrays.fill(dist, -1);
+        dist[1] = 0;
 
+        Queue<Integer> q = new LinkedList<>();
+        q.add(1);
+
+        while (!q.isEmpty()) {
+
+            int node = q.poll();
+            for (int nbr : adj.get(node)) {
+                if (dist[nbr] == -1) {
+                    dist[nbr] = dist[node] + 1;
+                    q.add(nbr);
+                }
+            }
+
+        }
+
+        int[] res = new int[k + 1];
+        for (int i = 0; i < n; i++) {
+            res[products[i]] = max(res[products[i]], dist[i + 1]);
+        }
+        // 5. Optimized Output
+        StringBuilder sb = new StringBuilder();
+        for (int i = 1; i <= k; i++) {
+            sb.append(res[i]);
+            if (i < k) {
+                sb.append(" ");
+            }
+        }
+        // Assuming 'pw' (PrintWriter) is accessible or you are using System.out
+        System.out.println(sb.toString()); // If using System.out
     }
 }
+
+// InputCopy
+// 3 3 2
+// 2 1 1
+// 1 2
+// 3 1
+// 3 2
+// OutputCopy
+// 1 0
