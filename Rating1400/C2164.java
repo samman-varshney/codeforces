@@ -1,8 +1,10 @@
+package Rating1400;
+
 import java.util.*;
 import java.io.*;
 
 @SuppressWarnings("unused")
-public class biolerplate {
+public class C2164 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -160,8 +162,8 @@ public class biolerplate {
     public static long lcm(long a, long b) {
         return (a * b) / gcd(a, b);
     }
-    
-     // reverSse in a range
+
+    // reverse in a range
     public static void reverse(int[] arr, int start, int end) {
         while (start < end) {
             int temp = arr[start];
@@ -407,6 +409,12 @@ public class biolerplate {
         try {
             int tcase = readInt();
             while (tcase-- > 0) {
+                int[] v = readIntArray(2);
+                int[] a = readIntArray(v[0]);
+                int[] b = readIntArray(v[1]);
+                int[] c = readIntArray(v[1]);
+
+                helper(v[0], v[1], a, b, c);
 
             }
         } catch (Exception err) {
@@ -415,7 +423,43 @@ public class biolerplate {
         }
     }
 
-    public static void helper() throws IOException {
+    public static void helper(int n, int m, int[] a, int[] b, int[] c) throws IOException {
+        int[][] temp = new int[m][2];
+        for (int i = 0; i < m; i++) {
+            temp[i][0] = b[i];
+            temp[i][1] = c[i];
+        }
 
+        Arrays.sort(temp, (x, y) -> {
+            if (x[1] != 0 && y[1] != 0) {
+                return x[0] - y[0];
+            } else if (x[1] == 0 && y[1] == 0) {
+                return y[0] - x[0];
+            } else {
+                return y[1] - x[1];
+            }
+        });
+
+        // for(int i=0; i<m; i++){
+        // print("( "+temp[i][0]+" "+temp[i][1]+" ) ");
+        // }
+
+        Arrays.sort(a);  
+        reverse(a, 0, n-1);
+
+        int i = 0;int count = 0;
+        for(int j=0; j<m && i < n; j++){
+            if(temp[j][0] <= a[i]){
+                count++;
+                if(temp[j][1] != 0){
+                    a[i] = max(a[i], temp[j][1]);
+                }else{
+                    i++;
+                }
+            }
+        }
+
+        println(count);
+        
     }
 }
