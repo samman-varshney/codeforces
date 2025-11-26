@@ -1,10 +1,9 @@
-package Rating1400;
+package Rating1600;
 
 import java.util.*;
 import java.io.*;
 
-@SuppressWarnings("unused")
-public class C2164 {
+public class C785 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -162,11 +161,11 @@ public class C2164 {
     public static long lcm(long a, long b) {
         return (a * b) / gcd(a, b);
     }
-
-    // reverse in a range
-    public static void reverse(long[] arr, int start, int end) {
+    
+     // reverSse in a range
+    public static void reverse(int[] arr, int start, int end) {
         while (start < end) {
-            long temp = arr[start];
+            int temp = arr[start];
             arr[start] = arr[end];
             arr[end] = temp;
             start++;
@@ -407,15 +406,10 @@ public class C2164 {
 
     public static void main(String[] args) {
         try {
-            int tcase = readInt();
+            int tcase = 1;
             while (tcase-- > 0) {
-                int[] v = readIntArray(2);
-                long[] a = readLongArray(v[0]);
-                long[] b = readLongArray(v[1]);
-                long[] c = readLongArray(v[1]);
-
-                helper(v[0], v[1], a, b, c);
-
+                long[] x = readLongArray(2);
+                helper(x[0], x[1]);
             }
         } catch (Exception err) {
             System.err.println("An unexpected error occurred:");
@@ -423,39 +417,7 @@ public class C2164 {
         }
     }
 
-    public static void helper(int n, int m, long[] a, long[] b, long[] c) throws IOException {
-        long[][] temp = new long[m][2];
-        for (int i = 0; i < m; i++) {
-            temp[i][0] = b[i];
-            temp[i][1] = c[i];
-        }
-
-        Arrays.sort(temp, (x, y) -> {
-            if (x[1] != 0 && y[1] != 0) {
-                return (int)(x[0] - y[0]);
-            } else if (x[1] == 0 && y[1] == 0) {
-                return (int)(y[0] - x[0]);
-            } else {
-                return (int)(y[1] - x[1]);
-            }
-        });
-
-        Arrays.sort(a);  
-        reverse(a, 0, n-1);
-
-        int i = 0;int count = 0;
-        for(int j=0; j<m && i < n; j++){
-            if(temp[j][0] <= a[i]){
-                count++;
-                if(temp[j][1] != 0){
-                    a[i] = max(a[i], temp[j][1]);
-                }else{
-                    i++;
-                }
-            }
-        }
-
-        println(count);
-        
+    public static void helper(long n, long m) throws IOException {
+        println(m + (n - m +1)/2);
     }
 }

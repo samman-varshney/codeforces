@@ -1,10 +1,9 @@
-package Rating1400;
+package Rating1900;
 
 import java.util.*;
 import java.io.*;
 
-@SuppressWarnings("unused")
-public class C2164 {
+public class B1242 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -163,10 +162,10 @@ public class C2164 {
         return (a * b) / gcd(a, b);
     }
 
-    // reverse in a range
-    public static void reverse(long[] arr, int start, int end) {
+    // reverSse in a range
+    public static void reverse(int[] arr, int start, int end) {
         while (start < end) {
-            long temp = arr[start];
+            int temp = arr[start];
             arr[start] = arr[end];
             arr[end] = temp;
             start++;
@@ -407,15 +406,11 @@ public class C2164 {
 
     public static void main(String[] args) {
         try {
-            int tcase = readInt();
+            int tcase = 1;
             while (tcase-- > 0) {
-                int[] v = readIntArray(2);
-                long[] a = readLongArray(v[0]);
-                long[] b = readLongArray(v[1]);
-                long[] c = readLongArray(v[1]);
-
-                helper(v[0], v[1], a, b, c);
-
+                int[] x = readIntArray(2);
+                int[][] edges = read2DArray(x[1], 2);
+                helper(x[0], x[1], edges);
             }
         } catch (Exception err) {
             System.err.println("An unexpected error occurred:");
@@ -423,39 +418,60 @@ public class C2164 {
         }
     }
 
-    public static void helper(int n, int m, long[] a, long[] b, long[] c) throws IOException {
-        long[][] temp = new long[m][2];
-        for (int i = 0; i < m; i++) {
-            temp[i][0] = b[i];
-            temp[i][1] = c[i];
+    static TreeSet<Integer>[] map;
+    static TreeSet<Integer> set;
+
+    @SuppressWarnings("unchecked")
+    public static void helper(int n, int m, int[][] edges) throws IOException {
+        map = new TreeSet[n];
+        set = new TreeSet<>();
+
+        for (int i = 0; i < n; i++) {
+            map[i] = new TreeSet<>();
+            set.add(i);
         }
 
-        Arrays.sort(temp, (x, y) -> {
-            if (x[1] != 0 && y[1] != 0) {
-                return (int)(x[0] - y[0]);
-            } else if (x[1] == 0 && y[1] == 0) {
-                return (int)(y[0] - x[0]);
-            } else {
-                return (int)(y[1] - x[1]);
+        for (int i = 0; i < m; i++) {
+            int u = edges[i][0] - 1;
+            int v = edges[i][1] - 1;
+            map[u].add(v);
+            map[v].add(u);
+        }
+
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            if (set.remove(i)) {
+                ans++;
+                bfs(i);
             }
-        });
+        }
 
-        Arrays.sort(a);  
-        reverse(a, 0, n-1);
+        println(ans - 1);
+    }
 
-        int i = 0;int count = 0;
-        for(int j=0; j<m && i < n; j++){
-            if(temp[j][0] <= a[i]){
-                count++;
-                if(temp[j][1] != 0){
-                    a[i] = max(a[i], temp[j][1]);
-                }else{
-                    i++;
+    public static void bfs(int node) {
+        Queue<Integer> q = new LinkedList<>();
+        q.add(node);
+
+        while (!q.isEmpty()) {
+            int u = q.poll();
+
+            // Store nodes that will be removed
+            ArrayList<Integer> toRemove = new ArrayList<>();
+
+            Iterator<Integer> it = set.iterator();
+            while (it.hasNext()) {
+                int x = it.next();
+                if (!map[u].contains(x)) {
+                    q.add(x);
+                    toRemove.add(x);
                 }
             }
-        }
 
-        println(count);
-        
+            // Remove all after iteration
+            for (int x : toRemove)
+                set.remove(x);
+        }
     }
+
 }

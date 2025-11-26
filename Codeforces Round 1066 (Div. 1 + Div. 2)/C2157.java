@@ -1,10 +1,7 @@
-package Rating1400;
-
 import java.util.*;
 import java.io.*;
 
-@SuppressWarnings("unused")
-public class C2164 {
+public class C2157 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -163,10 +160,10 @@ public class C2164 {
         return (a * b) / gcd(a, b);
     }
 
-    // reverse in a range
-    public static void reverse(long[] arr, int start, int end) {
+    // reverSse in a range
+    public static void reverse(int[] arr, int start, int end) {
         while (start < end) {
-            long temp = arr[start];
+            int temp = arr[start];
             arr[start] = arr[end];
             arr[end] = temp;
             start++;
@@ -409,13 +406,9 @@ public class C2164 {
         try {
             int tcase = readInt();
             while (tcase-- > 0) {
-                int[] v = readIntArray(2);
-                long[] a = readLongArray(v[0]);
-                long[] b = readLongArray(v[1]);
-                long[] c = readLongArray(v[1]);
-
-                helper(v[0], v[1], a, b, c);
-
+                int[] x = readIntArray(3);
+                int[][] queries = read2DArray(x[2], 3);
+                helper(x[0], x[1], x[2], queries);
             }
         } catch (Exception err) {
             System.err.println("An unexpected error occurred:");
@@ -423,39 +416,53 @@ public class C2164 {
         }
     }
 
-    public static void helper(int n, int m, long[] a, long[] b, long[] c) throws IOException {
-        long[][] temp = new long[m][2];
-        for (int i = 0; i < m; i++) {
-            temp[i][0] = b[i];
-            temp[i][1] = c[i];
-        }
+    public static int[][] merge(int[][] intervals) {
+        if (intervals == null || intervals.length == 0)
+            return new int[0][];
 
-        Arrays.sort(temp, (x, y) -> {
-            if (x[1] != 0 && y[1] != 0) {
-                return (int)(x[0] - y[0]);
-            } else if (x[1] == 0 && y[1] == 0) {
-                return (int)(y[0] - x[0]);
+        // Sort by start
+        Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]));
+
+        List<int[]> merged = new ArrayList<>();
+        int[] cur = intervals[0];
+
+        for (int i = 1; i < intervals.length; i++) {
+            int[] nxt = intervals[i];
+            if (nxt[0] <= cur[1]) {
+                // Overlaps -> merge by extending the end
+                cur[1] = Math.max(cur[1], nxt[1]);
             } else {
-                return (int)(y[1] - x[1]);
-            }
-        });
-
-        Arrays.sort(a);  
-        reverse(a, 0, n-1);
-
-        int i = 0;int count = 0;
-        for(int j=0; j<m && i < n; j++){
-            if(temp[j][0] <= a[i]){
-                count++;
-                if(temp[j][1] != 0){
-                    a[i] = max(a[i], temp[j][1]);
-                }else{
-                    i++;
-                }
+                // No overlap -> push current and move to next
+                merged.add(cur);
+                cur = nxt;
             }
         }
+        merged.add(cur);
 
-        println(count);
+        return merged.toArray(new int[merged.size()][]);
+    }
+
+    public static void helper(int n, int k, int q, int[][] queries) throws IOException {
+       
+        Arrays.sort(queries, (a, b)->(a[1] - b[1]));
         
+
     }
 }
+// 4
+// 6 2 2
+// 1 1 3
+// 2 2 6
+// 3 3 1
+// 2 1 3
+// 3 3 2
+// 1 1 1
+// 1 3 3
+// 3 2 2
+// 2 1 2
+// 2 2 3
+// OutputCopy
+// 2 5 4 3 0 1
+// 2 0 1
+// 3 3 3
+// 1 0 1

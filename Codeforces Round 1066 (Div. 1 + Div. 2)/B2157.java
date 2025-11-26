@@ -1,10 +1,7 @@
-package Rating1400;
-
 import java.util.*;
 import java.io.*;
 
-@SuppressWarnings("unused")
-public class C2164 {
+public class B2157 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -163,10 +160,10 @@ public class C2164 {
         return (a * b) / gcd(a, b);
     }
 
-    // reverse in a range
-    public static void reverse(long[] arr, int start, int end) {
+    // reverSse in a range
+    public static void reverse(int[] arr, int start, int end) {
         while (start < end) {
-            long temp = arr[start];
+            int temp = arr[start];
             arr[start] = arr[end];
             arr[end] = temp;
             start++;
@@ -409,13 +406,9 @@ public class C2164 {
         try {
             int tcase = readInt();
             while (tcase-- > 0) {
-                int[] v = readIntArray(2);
-                long[] a = readLongArray(v[0]);
-                long[] b = readLongArray(v[1]);
-                long[] c = readLongArray(v[1]);
-
-                helper(v[0], v[1], a, b, c);
-
+                int[] x = readIntArray(3);
+                char[] ops = readString().toCharArray();
+                helper(x[0], x[1], x[2], ops);
             }
         } catch (Exception err) {
             System.err.println("An unexpected error occurred:");
@@ -423,39 +416,56 @@ public class C2164 {
         }
     }
 
-    public static void helper(int n, int m, long[] a, long[] b, long[] c) throws IOException {
-        long[][] temp = new long[m][2];
-        for (int i = 0; i < m; i++) {
-            temp[i][0] = b[i];
-            temp[i][1] = c[i];
-        }
+    public static void helper(int n, int x, int y, char[] ops) throws IOException {
+        x = Math.abs(x);
+        y = Math.abs(y);
+        long A = max(x, y);
+        long B = min(x, y);
 
-        Arrays.sort(temp, (x, y) -> {
-            if (x[1] != 0 && y[1] != 0) {
-                return (int)(x[0] - y[0]);
-            } else if (x[1] == 0 && y[1] == 0) {
-                return (int)(y[0] - x[0]);
-            } else {
-                return (int)(y[1] - x[1]);
-            }
-        });
-
-        Arrays.sort(a);  
-        reverse(a, 0, n-1);
-
-        int i = 0;int count = 0;
-        for(int j=0; j<m && i < n; j++){
-            if(temp[j][0] <= a[i]){
-                count++;
-                if(temp[j][1] != 0){
-                    a[i] = max(a[i], temp[j][1]);
-                }else{
-                    i++;
+        
+        for (int i = n - 1; i >= 0; i--) {
+            char c = ops[i];
+            if (c == '8') {
+                if (A > 0)
+                    A--;
+                if (B > 0)
+                    B--;
+            } else { 
+                if (A >= B) {
+                    if (A > 0)
+                        A--;
+                } else {
+                    if (B > 0)
+                        B--;
                 }
             }
+            if (A == 0 && B == 0)
+                break; 
         }
 
-        println(count);
-        
+        println(A==0 && B==0? "YES" : "NO");
     }
 }
+
+// Example
+// InputCopy
+// 6
+// 3 3 3
+// 888
+// 4 5 1
+// 4884
+// 4 3 -3
+// 4884
+// 7 -7 -5
+// 4884884
+// 10 0 0
+// 4884884888
+// 1 1 1
+// 4
+// OutputCopy
+// YES
+// NO
+// YES
+// NO
+// YES
+// NO
