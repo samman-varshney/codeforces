@@ -406,7 +406,7 @@ public class C785 {
 
     public static void main(String[] args) {
         try {
-            int tcase = 1;
+            int tcase = readInt();
             while (tcase-- > 0) {
                 long[] x = readLongArray(2);
                 helper(x[0], x[1]);
@@ -418,6 +418,17 @@ public class C785 {
     }
 
     public static void helper(long n, long m) throws IOException {
-        println(m + (n - m +1)/2);
+        n -= m;
+        long start = 1, end = 200000000L;
+        while(start <= end){
+            long mid = start + (end - start)/2;
+            long eaten = mid*(mid+1)/2;
+            if(eaten >= n){
+                end = mid-1;
+            }else{
+                start = mid+1;
+            }
+        }
+        println(start+m);
     }
 }
