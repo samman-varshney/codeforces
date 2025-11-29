@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
 
-public class C2157 {
+public class B2158 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -159,8 +159,8 @@ public class C2157 {
     public static long lcm(long a, long b) {
         return (a * b) / gcd(a, b);
     }
-
-    // reverSse in a range
+    
+     // reverSse in a range
     public static void reverse(int[] arr, int start, int end) {
         while (start < end) {
             int temp = arr[start];
@@ -406,9 +406,9 @@ public class C2157 {
         try {
             int tcase = readInt();
             while (tcase-- > 0) {
-                int[] x = readIntArray(3);
-                int[][] queries = read2DArray(x[2], 3);
-                helper(x[0], x[1], x[2], queries);
+                int n = readInt();
+                int[] nums = readIntArray(2*n);
+                helper(n, nums);
             }
         } catch (Exception err) {
             System.err.println("An unexpected error occurred:");
@@ -416,59 +416,55 @@ public class C2157 {
         }
     }
 
-    public static void helper(int n, int k, int q, int[][] queries) throws IOException {
-       
-        int[] c2 = new int[n+1]; // mex array 2
-        int[] c1 = new int[n+1]; // minimum array 1
+    public static void helper(int n, int[] nums) throws IOException {
+        int[] freq = new int[2*n+1];
+        for(int x : nums){
+            freq[x]++;
+        }
 
-        for(int i =0; i <q; i++){
-            int[] query = queries[i];
-            if(query[0] == 1){
-                c1[query[1]] += 1;
-                if(query[2]+1 <= n )
-                    c1[query[2]+1] -= 1;
+        int odd =0, even_odd =0, even_even =0;
+
+        for(int x : freq){
+            if(x == 0)continue;
+            if(x%2  != 0){
+                odd++;
             }else{
-                c2[query[1]] += 1;
-                if(query[2]+1 <= n )
-                    c2[query[2]+1] -= 1;
+                int q = x/2;
+                if(q%2 == 0)
+                    even_even++;
+                else
+                    even_odd++;
             }
         }
 
-        for(int i=1; i<=n; i++){
-            c1[i] += c1[i-1];
-            c2[i] += c2[i-1];
+        if(odd == 0 && even_even > 0 && even_even%2 != 0){
+            even_even-=1;
         }
-        int[] res = new int[n];
-        Arrays.fill(res, k+1);
-        int val = 0;
-        for(int i =0; i<n; i++){
-            if(c2[i+1]!=0 && c1[i+1]==0){
-                res[i] = val%k;
-                val++;
-            }
-            if(c1[i+1]!=0 && c2[i+1]==0){
-                res[i] = k;
-            }
-        }
-        
-        printArray(res);
-
+        println(odd + even_odd*2 +  even_even*2);
     }
 }
+// Example
+// InputCopy
+// 7
+// 2
+// 1 2 3 4
+// 3
+// 5 5 5 5 5 5
 // 4
-// 6 2 2
-// 1 1 3
-// 2 2 6
-// 3 3 1
-// 2 1 3
-// 3 3 2
-// 1 1 1
-// 1 3 3
-// 3 2 2
-// 2 1 2
-// 2 2 3
+// 3 3 7 6 3 7 8 7
+// 2
+// 2 2 2 2
+// 6
+// 1 2 3 4 5 4 1 4 1 5 4 6
+// 4
+// 1 2 1 2 1 2 1 2
+// 5
+// 9 9 9 7 7 7 9 7 7 7
 // OutputCopy
-// 2 5 4 3 0 1
-// 2 0 1
-// 3 3 3
-// 1 0 1
+// 4
+// 2
+// 4
+// 0
+// 8
+// 4
+// 2

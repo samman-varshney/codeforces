@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
 
-public class C2157 {
+public class C2158 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -406,9 +406,13 @@ public class C2157 {
         try {
             int tcase = readInt();
             while (tcase-- > 0) {
-                int[] x = readIntArray(3);
-                int[][] queries = read2DArray(x[2], 3);
-                helper(x[0], x[1], x[2], queries);
+                int[] x = readIntArray(2);
+                long[] a = readLongArray(x[0]);
+                long[] b = readLongArray(x[0]);
+                if (x[1] % 2 != 0)
+                    withOneReplacement(x[0], a, b);
+                else
+                    withNoReplacement(a);
             }
         } catch (Exception err) {
             System.err.println("An unexpected error occurred:");
@@ -416,59 +420,61 @@ public class C2157 {
         }
     }
 
-    public static void helper(int n, int k, int q, int[][] queries) throws IOException {
-       
-        int[] c2 = new int[n+1]; // mex array 2
-        int[] c1 = new int[n+1]; // minimum array 1
-
-        for(int i =0; i <q; i++){
-            int[] query = queries[i];
-            if(query[0] == 1){
-                c1[query[1]] += 1;
-                if(query[2]+1 <= n )
-                    c1[query[2]+1] -= 1;
-            }else{
-                c2[query[1]] += 1;
-                if(query[2]+1 <= n )
-                    c2[query[2]+1] -= 1;
-            }
-        }
-
-        for(int i=1; i<=n; i++){
-            c1[i] += c1[i-1];
-            c2[i] += c2[i-1];
-        }
-        int[] res = new int[n];
-        Arrays.fill(res, k+1);
-        int val = 0;
-        for(int i =0; i<n; i++){
-            if(c2[i+1]!=0 && c1[i+1]==0){
-                res[i] = val%k;
-                val++;
-            }
-            if(c1[i+1]!=0 && c2[i+1]==0){
-                res[i] = k;
-            }
-        }
+    public static void withOneReplacement(int n, long[] a, long[] b) throws IOException {
+        long profit = a[0] + b[0];
+        long noProfit = a[0];
         
-        printArray(res);
+        long ans = Math.max(noProfit, profit);
 
+        for (int i = 1; i < n; i++) {
+            
+            long temp = Math.max(a[i], noProfit + a[i]);
+            long newBoost = Math.max(
+                    a[i] + b[i],
+                    noProfit + a[i] + b[i]);
+
+            noProfit = temp;
+            profit = Math.max(profit + a[i], newBoost);
+
+            ans = Math.max(ans, Math.max(noProfit, profit));
+        }
+
+        println(ans);
+    }
+
+    public static void withNoReplacement(long[] a) throws IOException {
+        long curr = a[0];
+        long total = a[0];
+
+        for (int i = 1; i < a.length; i++) {
+            curr = Math.max(a[i], curr + a[i]);
+            total = Math.max(total, curr);
+        }
+
+        println(total);
     }
 }
-// 4
-// 6 2 2
-// 1 1 3
-// 2 2 6
-// 3 3 1
-// 2 1 3
-// 3 3 2
-// 1 1 1
-// 1 3 3
-// 3 2 2
-// 2 1 2
-// 2 2 3
+// Example
+// InputCopy
+// 5
+// 5 200000
+// 3 -1 9 -5 4
+// 0 0 0 0 0
+// 4 5
+// 10 10 10 10
+// 1 1 1 1
+// 3 1
+// 2 -7 3
+// 1 11 3
+// 3 2
+// 2 -7 3
+// 1 11 3
+// 1 1
+// -3
+// 2
 // OutputCopy
-// 2 5 4 3 0 1
-// 2 0 1
-// 3 3 3
-// 1 0 1
+// 11
+// 41
+// 9
+// 3
+// -1

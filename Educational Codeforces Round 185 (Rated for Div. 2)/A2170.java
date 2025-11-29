@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
 
-public class C2157 {
+public class A2170 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -159,8 +159,8 @@ public class C2157 {
     public static long lcm(long a, long b) {
         return (a * b) / gcd(a, b);
     }
-
-    // reverSse in a range
+    
+     // reverSse in a range
     public static void reverse(int[] arr, int start, int end) {
         while (start < end) {
             int temp = arr[start];
@@ -406,9 +406,7 @@ public class C2157 {
         try {
             int tcase = readInt();
             while (tcase-- > 0) {
-                int[] x = readIntArray(3);
-                int[][] queries = read2DArray(x[2], 3);
-                helper(x[0], x[1], x[2], queries);
+                helper(readInt());
             }
         } catch (Exception err) {
             System.err.println("An unexpected error occurred:");
@@ -416,59 +414,28 @@ public class C2157 {
         }
     }
 
-    public static void helper(int n, int k, int q, int[][] queries) throws IOException {
-       
-        int[] c2 = new int[n+1]; // mex array 2
-        int[] c1 = new int[n+1]; // minimum array 1
-
-        for(int i =0; i <q; i++){
-            int[] query = queries[i];
-            if(query[0] == 1){
-                c1[query[1]] += 1;
-                if(query[2]+1 <= n )
-                    c1[query[2]+1] -= 1;
-            }else{
-                c2[query[1]] += 1;
-                if(query[2]+1 <= n )
-                    c2[query[2]+1] -= 1;
-            }
+    public static void helper(int n) throws IOException {
+        if( n==1 ){
+            println(1);
+        }else if( n == 2 ){
+            println(9);
+        }else{
+            println( (n*(n-1) + n) +" " + (n*(n-1)+n-1) +" "+ (n*(n-1)+n-2)+" " + (n*(n-2) +n-1));
         }
-
-        for(int i=1; i<=n; i++){
-            c1[i] += c1[i-1];
-            c2[i] += c2[i-1];
-        }
-        int[] res = new int[n];
-        Arrays.fill(res, k+1);
-        int val = 0;
-        for(int i =0; i<n; i++){
-            if(c2[i+1]!=0 && c1[i+1]==0){
-                res[i] = val%k;
-                val++;
-            }
-            if(c1[i+1]!=0 && c2[i+1]==0){
-                res[i] = k;
-            }
-        }
-        
-        printArray(res);
-
     }
 }
+
+// Example
+// InputCopy
+// 5
+// 1
+// 2
+// 3
 // 4
-// 6 2 2
-// 1 1 3
-// 2 2 6
-// 3 3 1
-// 2 1 3
-// 3 3 2
-// 1 1 1
-// 1 3 3
-// 3 2 2
-// 2 1 2
-// 2 2 3
+// 5
 // OutputCopy
-// 2 5 4 3 0 1
-// 2 0 1
-// 3 3 3
-// 1 0 1
+// 1
+// 9
+// 29
+// 56
+// 95
