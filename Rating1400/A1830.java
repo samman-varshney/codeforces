@@ -457,16 +457,13 @@ public class A1830 {
     public static int dfs(int u, int[] parent, int[] occur, int prev, List<List<Integer>> adj){
       
         int max = 0;
-        boolean early = false;
         for(int v: adj.get(u)){
             if(v != prev){
                 parent[v] = u;
-                if(occur[v] < occur[u]){
-                    early = true;
-                }
-                max = max(max, dfs(v, parent, occur, u, adj));
+            
+                max = max(max, dfs(v, parent, occur, u, adj)+(occur[v] < occur[u]?1:0));
             }
         }
-        return max+(early?1:0);
+        return max;
     }
 }
