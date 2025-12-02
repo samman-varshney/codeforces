@@ -367,53 +367,43 @@ public class C2151 {
             int tcase = readInt();
             while (tcase-- > 0) {
                 int n = readInt();
-                long[] nums = readLongArray(n);
+                long[] nums = readLongArray(2*n);
                 helper(n, nums);
             }
         } catch (Exception err) {
-            System.out.println(err);
+            // System.out.println(err);
+            err.printStackTrace();
         }
     }
 
     public static void helper(int n, long[] nums) throws IOException {
-        long[] prefix1 = new long[n];
-        long[] prefix2 = new long[n];
-
-        long prev = 0;
-        for(int i=1; i<n; i+=2){
-            prefix1[i] = prev + nums[i] - nums[i-1];
-            prefix1[i-1] = prefix1[i];
-            prev = prefix1[i];
+        Arrays.sort(nums);
+        long[] odd = new long[2*n];
+        long[] even = new long[2*n];
+        long[] prefix = new long[2*n];
+        
+        for(int i=2; i<2*n; i+=2){
+            odd[i] = odd[i-2] + nums[i] - nums[i-1];
         }
 
-        prev = 0;
-        for(int i=2; i<n; i+=2){
-            prefix2[i] = prev + nums[i] - nums[i-1];
-            prefix2[i-1] = prefix2[i];
-            prev = prefix2[i];
+        for(int i=1; i<2*n; i+=2){
+            even[i] = (i>1?even[i-2]:0) + nums[i] - nums[i-1];
         }
 
-        List<List<Long>> res = new ArrayList<>();
-        res.add(new ArrayList<>());
-        res.get(0).add(prefix1[n-1]);
+        for(int i=n-1; i>=0; i--){
+            prefix[n-1-i] = (n-1-i>0?prefix[n-i-2]:0) + nums[i] + nums[n-1+i];
+        }
 
-        for(int i=2; i<=n; i++){
-            long ans = 0;
-            for(int k=0; k<i; k++){
-                ans += nums[n-k-1] - nums[k];
-            }
-            if( i%2 != 0){
-                ans += prefix1[n-i] - prefix1[i-2] ;
+        for(int i=1; i<=n; i++){
+            long sum = prefix[n-1] - (i<n?prefix[n-1-i]:0);
+            if(i%2 == 0){
+                sum += even[2*n-1-i] - even[i-1];
             }else{
-                ans += prefix2[n-i] - prefix2[i-2];
+                sum += odd[2*n-1-i] - odd[i-1];
             }
-            res.add(new ArrayList<>());
-            res.get(i-1).add(ans);
+            print(sum+" ");
         }
-
-        for(int i=0; i<n; i++){
-            printList(res.get(i));
-        }
+        println();
     }
 }
 

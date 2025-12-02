@@ -448,7 +448,7 @@ public class C2152 {
                 println(-1);
             }else{
                 //all alternating 
-                int sum  = ones/3 + zeros/3 + (dp[r] >= (r - l)? 1: 0);
+                int sum  = ones/3 + zeros/3 + (dp[r] - dp[l] == (r - l)? 1: 0);
                 println(sum);
             }
         }
