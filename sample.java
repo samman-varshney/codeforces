@@ -39,13 +39,34 @@ public class sample {
     }
 
     public static void main(String[] args) {
-        int[] price = {1, 5, 9 , 11};
-        List<Integer> list = new ArrayList<>();
-        for(int x: price){
-            list.add(x);
-        }
-        int k = 4;
-        int d = 2;
-        System.out.println(minOperations(list, k, d));
+        Integer k = 100;
+        Integer m = 300;
+        Integer temp = k;
+        k = m;
+        m = temp;
+        System.out.println(k+" "+m);//values get swapped
+
+        swap(k, m);
+        System.out.println(k+" "+m);
+
+        String s = "234";
+        String t = "345";
+
+        swap(s, t);
+        System.out.println(s+" "+t);
     }
+
+    public static void swap(Integer k, Integer m){
+        Integer temp = k;
+        k = m;
+        m = temp;
+    }
+
+    static void swap(String s, String t){
+        String temp = s;
+        s = t;
+        t = temp;
+    }
+
+
 }
