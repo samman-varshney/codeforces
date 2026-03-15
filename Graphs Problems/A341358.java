@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
-@SuppressWarnings("unused" )
-public class A {
+
+public class A341358 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -133,7 +133,7 @@ public class A {
 
     // upper bound of an array
     public static int upperBound(int[] nums, int val) {
-        int start = 0, end = nums.length;
+        int start = 0, end = nums.length - 1;
         while (start <= end) {
             int mid = start + (end - start) / 2;
             if (nums[mid] >= val) {
@@ -148,7 +148,7 @@ public class A {
     // gcd of two numbers
     public static long gcd(long a, long b) {
         while (b != 0) {
-            long temp = b; 
+            long temp = b;
             b = a % b;
             a = temp;
         }
@@ -158,6 +158,17 @@ public class A {
     // lcm of two numbers
     public static long lcm(long a, long b) {
         return (a * b) / gcd(a, b);
+    }
+    
+     // reverSse in a range
+    public static void reverse(int[] arr, int start, int end) {
+        while (start < end) {
+            int temp = arr[start];
+            arr[start] = arr[end];
+            arr[end] = temp;
+            start++;
+            end--;
+        }
     }
 
     // -----------------read methods-------------------------//
@@ -213,6 +224,7 @@ public class A {
         }
         return arr;
     }
+
     public static int[][] read2DArray(int n, int m) throws IOException {
         int[][] arr = new int[n][m];
         for (int i = 0; i < n; i++) {
@@ -287,7 +299,8 @@ public class A {
 
     public static <T extends Number> int getMSBPosition(T num) {
         long n = num.longValue();
-        if (n == 0) return -1; // No set bit
+        if (n == 0)
+            return -1; // No set bit
 
         int pos = 0;
         while (n > 0) {
@@ -301,8 +314,8 @@ public class A {
         for (T element : list) {
             bw.write(element + " ");
         }
-        bw.newLine(); 
-        bw.flush();   
+        bw.newLine();
+        bw.flush();
     }
 
     public static void println(int x) throws IOException {
@@ -393,35 +406,47 @@ public class A {
         try {
             int tcase = readInt();
             while (tcase-- > 0) {
-                int[] var = readIntArray(2);
-                int[] nums = readIntArray(var[0]);
-                helper(var[0], var[1], nums);
+                int n = readInt();
+                int[] nums = readIntArray(n);
+                helper(n, nums);
             }
         } catch (Exception err) {
-            System.out.println(err);
+            System.err.println("An unexpected error occurred:");
+            err.printStackTrace();
         }
     }
 
-    public static void helper(int n, int a, int[] nums) throws IOException {
-        Arrays.sort(nums);
-        int left = lowerBound(nums, a-1);
-        int right = upperBound(nums, a+1);
+    public static void helper(int n, int[] nums) throws IOException {
+        int idx = -1;
+        for(int i=0; i<n; i++){
+            if(nums[i] == 0 && nums[(i+1)%n] == 1){
+                idx = i+1;
+                break;
+            }
+        }
+        if(idx == -1){
+            println(-1);
+            return;
+        }
 
-        println(left+1 > n - right? a-1:a+1);
-
+        for(int i=0; i<idx; i++){
+            print((i+1)+" ");
+        }
+        print((n+1)+" ");
+        for(int i=idx; i<n; i++){
+            print((i+1)+" ");
+        }
+        println();
     }
 }
 
 // Example
 // InputCopy
+// 2
 // 3
-// 7 21
-// 10 20 30 40 50 60 70
-// 6 500
-// 200 200 300 500 600 600
-// 2 7
-// 7 7
+// 0 1 0
+// 3
+// 1 1 0
 // OutputCopy
-// 35
-// 333
-// 1337
+// 1 4 2 3 
+// 4 1 2 3 
