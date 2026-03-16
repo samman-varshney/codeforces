@@ -2,7 +2,7 @@ import java.util.*;
 import java.io.*;
 
 @SuppressWarnings("unused")
-public class B {
+public class B2169 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -402,16 +402,18 @@ public class B {
             System.out.println(err);
         }
     }
+
     public static boolean patternGTLT(char[] arr) {
-    boolean seenGT = false;
+        boolean seenGT = false;
 
-    for (char c : arr) {
-        if (c == '>') seenGT = true;
-        if (seenGT && c == '<') return true;
+        for (char c : arr) {
+            if (c == '>')
+                seenGT = true;
+            if (seenGT && c == '<')
+                return true;
+        }
+        return false;
     }
-    return false;
-}
-
 
     public static boolean patternGTStar(char[] arr) {
         boolean seenGT = false;
@@ -456,7 +458,7 @@ public class B {
             return;
         }
 
-        if(patternDoubleStar(s) || patternGTStar(s) || patternStarLT(s) || patternGTLT(s)){
+        if (patternDoubleStar(s) || patternGTStar(s) || patternStarLT(s) || patternGTLT(s)) {
             println(-1);
             return;
         }
@@ -465,16 +467,16 @@ public class B {
         int lt = 0;
         int star = 0;
 
-        for(char c : s){
-            if(c == '*'){
+        for (char c : s) {
+            if (c == '*') {
                 star++;
-            }else if(c == '>'){
+            } else if (c == '>') {
                 gt++;
-            }else{
+            } else {
                 lt++;
             }
         }
-        println(Math.max(gt, lt)+star);
+        println(Math.max(gt, lt) + star);
     }
 }
 

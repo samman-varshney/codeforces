@@ -1,6 +1,9 @@
+package Segment_Tree_Problems;
+
+import java.util.*;
 import java.io.*;
 
-public class C2146 {
+public class D459 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -75,6 +78,14 @@ public class C2146 {
         }
     }
 
+    public static <T extends Comparable<T>> T max(T a, T b) {
+        return (a.compareTo(b) > 0) ? a : b;
+    }
+
+    public static <T extends Comparable<T>> T min(T a, T b) {
+        return (a.compareTo(b) < 0) ? a : b;
+    }
+
     // get max of an array (int)
     public static int getMaxOfArray(int[] nums) {
         int max = Integer.MIN_VALUE;
@@ -124,7 +135,7 @@ public class C2146 {
 
     // upper bound of an array
     public static int upperBound(int[] nums, int val) {
-        int start = 0, end = nums.length;
+        int start = 0, end = nums.length - 1;
         while (start <= end) {
             int mid = start + (end - start) / 2;
             if (nums[mid] >= val) {
@@ -137,9 +148,9 @@ public class C2146 {
     }
 
     // gcd of two numbers
-    public static int gcd(int a, int b) {
+    public static long gcd(long a, long b) {
         while (b != 0) {
-            int temp = b;
+            long temp = b;
             b = a % b;
             a = temp;
         }
@@ -147,8 +158,19 @@ public class C2146 {
     }
 
     // lcm of two numbers
-    public static int lcm(int a, int b) {
+    public static long lcm(long a, long b) {
         return (a * b) / gcd(a, b);
+    }
+
+    // reverSse in a range
+    public static void reverse(int[] arr, int start, int end) {
+        while (start < end) {
+            int temp = arr[start];
+            arr[start] = arr[end];
+            arr[end] = temp;
+            start++;
+            end--;
+        }
     }
 
     // -----------------read methods-------------------------//
@@ -201,6 +223,17 @@ public class C2146 {
         String[] input = br.readLine().split(" ");
         for (int i = 0; i < n; i++) {
             arr[i] = Integer.parseInt(input[i]);
+        }
+        return arr;
+    }
+
+    public static int[][] read2DArray(int n, int m) throws IOException {
+        int[][] arr = new int[n][m];
+        for (int i = 0; i < n; i++) {
+            String[] parts = br.readLine().trim().split("\\s+");
+            for (int j = 0; j < m; j++) {
+                arr[i][j] = Integer.parseInt(parts[j]);
+            }
         }
         return arr;
     }
@@ -262,6 +295,27 @@ public class C2146 {
                 sb.append(" ");
         }
         bw.write(sb.toString());
+        bw.newLine();
+        bw.flush();
+    }
+
+    public static <T extends Number> int getMSBPosition(T num) {
+        long n = num.longValue();
+        if (n == 0)
+            return -1; // No set bit
+
+        int pos = 0;
+        while (n > 0) {
+            n >>= 1;
+            pos++;
+        }
+        return pos - 1; // Zero-based index
+    }
+
+    public static <T> void printList(List<T> list) throws IOException {
+        for (T element : list) {
+            bw.write(element + " ");
+        }
         bw.newLine();
         bw.flush();
     }
@@ -352,79 +406,94 @@ public class C2146 {
 
     public static void main(String[] args) {
         try {
-            int tcase = readInt();
+            int tcase = 1;
             while (tcase-- > 0) {
                 int n = readInt();
-                char[] s = readString().toCharArray();
-                helper(n, s);
+                int[] nums = readIntArray(n);
+                helper(n, nums);
             }
         } catch (Exception err) {
-            System.out.println(err);
+            System.err.println("An unexpected error occurred:");
+            err.printStackTrace();
         }
     }
 
-    public static void helper(int n, char[] s) throws IOException {
-        int prev = -1;
-        int[] res = new int[n];
-        int j = 0;
+    static int[] prefix, suffix;
+    static long pairs;
+
+    public static void helper(int n, int[] nums) throws IOException {
+
+        prefix = new int[n];
+        suffix = new int[n];
+        HashMap<Integer, Integer> map = new HashMap<>();
         for (int i = 0; i < n; i++) {
-            if (s[i] == '1') {
-                int diff = i - prev - 1;
-                if (diff == 1) {
-                    println("NO");
-                    return;
-                } else {
-                    int dummy = i;
-                    while (j < i) {
-                        res[j] = dummy;
-                        dummy--;
-                        j++;
-                    }
-                    res[j++] = i + 1;
-                }
-                prev = i;
+            map.put(nums[i], map.getOrDefault(nums[i], 0) + 1);
+            prefix[i] = map.get(nums[i]);
+        }
+        map.clear();
+        for (int i = n - 1; i >= 0; i--) {
+            map.put(nums[i], map.getOrDefault(nums[i], 0) + 1);
+            suffix[i] = map.get(nums[i]);
+        }
+
+        pairs = 0;
+        sort(0, n - 1);
+        println(pairs);
+    }
+
+    static void sort(int l, int r) {
+        if (l < r) {
+            int mid = (l + r) / 2;
+            sort(l, mid);
+            sort(mid + 1, r);
+            merge(l, r);
+        }
+    }
+
+    static void merge(int l, int r) {
+        int mid = (l + r) / 2;
+
+        int i = l, j = mid + 1;
+        while (i <= mid && j <= r) {
+            if (prefix[i] <= suffix[j]) {
+                pairs += j - (mid + 1);
+                i++;
+            } else {
+                j++;
             }
         }
-        int diff = n - prev - 1;
-        if (diff == 1) {
-            println("NO");
-            return;
-        }
-        int dummy = n;
-        while (j < n) {
-            res[j] = dummy;
-            dummy--;
-            j++;
+
+        while (i <= mid) {
+            pairs += j - mid + 1;
         }
 
-        println("YES");
-        printArray(res);
+        sortedAndCopy(l, r, prefix);
+        sortedAndCopy(l, r, suffix);
+    }
+
+    static void sortedAndCopy(int l, int r, int[] arr) {
+        int mid = (l + r) / 2;
+        int[] sorted = new int[r - l + 1];
+        int i = l, j = mid + 1;
+        int k = 0;
+        while (i <= mid && j <= r) {
+            if (arr[i] < arr[j]) {
+                sorted[k++] = arr[i++];
+            } else {
+                sorted[k++] = arr[j++];
+            }
+        }
+
+        while (i <= mid) {
+            sorted[k++] = arr[i++];
+        }
+
+        while (j <= r) {
+            sorted[k++] = arr[j++];
+        }
+
+        for (k = l; k <= r; k++) {
+            arr[k] = sorted[k - l];
+        }
     }
 }
-
-// Example
-// InputCopy
-// 6
-// 3
-// 111
-// 5
-// 00000
-// 5
-// 10100
-// 7
-// 0010000
-// 11
-// 00001001100
-// 12
-// 011100010000
-// OutputCopy
-// YES
-// 1 2 3
-// YES
-// 2 4 3 5 1
-// NO
-// YES
-// 2 1 3 5 7 6 4
-// YES
-// 2 1 4 3 5 7 6 8 9 11 10
-// NO
