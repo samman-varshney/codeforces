@@ -464,7 +464,8 @@ public class D459 {
         }
 
         while (i <= mid) {
-            pairs += j - mid + 1;
+            pairs += j - (mid + 1);
+            i++;
         }
 
         sortedAndCopy(l, r, prefix);
