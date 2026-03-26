@@ -507,7 +507,7 @@ public class B {
     private static final int[] DOWN = { 1, 0 };
 
     // pattern names and vectors
-    private static final String[] PAT_NAMES = { "L-D", "D-L", "R-D", "D-R" };
+
     private static final int[][][] PATTERNS = {
             { LEFT, DOWN }, // left then down
             { DOWN, LEFT }, // down then left

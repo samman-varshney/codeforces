@@ -1,4 +1,5 @@
 package Unrated;
+
 import java.util.*;
 
 public class Officals {
@@ -6,6 +7,7 @@ public class Officals {
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
 
+        @SuppressWarnings("unchecked")
         List<Integer>[] tree = new ArrayList[n + 1]; // Adjacency list
         for (int i = 1; i <= n; i++) {
             tree[i] = new ArrayList<>();
