@@ -1,7 +1,9 @@
+package Rating1400;
+
 import java.util.*;
 import java.io.*;
 
-public class A341358 {
+public class D2131 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -159,8 +161,8 @@ public class A341358 {
     public static long lcm(long a, long b) {
         return (a * b) / gcd(a, b);
     }
-    
-     // reverSse in a range
+
+    // reverSse in a range
     public static void reverse(int[] arr, int start, int end) {
         while (start < end) {
             int temp = arr[start];
@@ -407,8 +409,8 @@ public class A341358 {
             int tcase = readInt();
             while (tcase-- > 0) {
                 int n = readInt();
-                int[] nums = readIntArray(n);
-                helper(n, nums);
+                int[][] edges = read2DArray(n - 1, 2);
+                helper(n, edges);
             }
         } catch (Exception err) {
             System.err.println("An unexpected error occurred:");
@@ -416,37 +418,33 @@ public class A341358 {
         }
     }
 
-    public static void helper(int n, int[] nums) throws IOException {
-        int idx = -1;
-        for(int i=0; i<n; i++){
-            if(nums[i] == 0 && nums[(i+1)%n] == 1){
-                idx = i+1;
-                break;
-            }
-        }
-        if(idx == -1){
-            println(-1);
+    public static void helper(int n, int[][] edges) throws IOException {
+        if (n <= 3) {
+            System.out.println(0);
             return;
         }
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            adj.add(new ArrayList<>());
+        }
 
-        for(int i=0; i<idx; i++){
-            print((i+1)+" ");
+        for (int[] e : edges) {
+            adj.get(e[0] - 1).add(e[1] - 1);
+            adj.get(e[1] - 1).add(e[0] - 1);
         }
-        print((n+1)+" ");
-        for(int i=idx; i<n; i++){
-            print((i+1)+" ");
+
+        int[] leafNodes = new int[n];
+        int total = 0;
+        for (int i = 0; i < n; i++) {
+            if (adj.get(i).size() == 1) {
+                total++;
+                leafNodes[adj.get(i).get(0)]++;
+            }
         }
-        println();
+        int max = 0;
+        for (int i = 0; i < n; i++) {
+            max = Math.max(max, leafNodes[i]);
+        }
+        System.out.println(total - max);
     }
 }
-
-// Example
-// InputCopy
-// 2
-// 3
-// 0 1 0
-// 3
-// 1 1 0
-// OutputCopy
-// 1 4 2 3 
-// 4 1 2 3 
