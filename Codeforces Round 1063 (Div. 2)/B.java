@@ -1,6 +1,6 @@
 import java.util.*;
 import java.io.*;
-@SuppressWarnings("unused" )
+
 public class B {
 
     // -------------------------Boiler Code----------------------//
@@ -148,7 +148,7 @@ public class B {
     // gcd of two numbers
     public static long gcd(long a, long b) {
         while (b != 0) {
-            long temp = b; 
+            long temp = b;
             b = a % b;
             a = temp;
         }
@@ -213,6 +213,7 @@ public class B {
         }
         return arr;
     }
+
     public static int[][] read2DArray(int n, int m) throws IOException {
         int[][] arr = new int[n][m];
         for (int i = 0; i < n; i++) {
@@ -287,7 +288,8 @@ public class B {
 
     public static <T extends Number> int getMSBPosition(T num) {
         long n = num.longValue();
-        if (n == 0) return -1; // No set bit
+        if (n == 0)
+            return -1; // No set bit
 
         int pos = 0;
         while (n > 0) {
@@ -301,8 +303,8 @@ public class B {
         for (T element : list) {
             bw.write(element + " ");
         }
-        bw.newLine(); 
-        bw.flush();   
+        bw.newLine();
+        bw.flush();
     }
 
     public static void println(int x) throws IOException {
@@ -404,23 +406,23 @@ public class B {
     }
 
     public static void helper(int n, int[] nums, char[] s) throws IOException {
-        if(s[0]=='1' || s[n-1]=='1'){
+        if (s[0] == '1' || s[n - 1] == '1') {
             println("NO");
             return;
         }
         int min = Integer.MAX_VALUE, idx1 = -1;
-        int max = Integer.MIN_VALUE, idx2=-1;
-        for(int i=0; i<n; i++){
-            if(min > nums[i]){
+        int max = Integer.MIN_VALUE, idx2 = -1;
+        for (int i = 0; i < n; i++) {
+            if (min > nums[i]) {
                 min = nums[i];
                 idx1 = i;
             }
-            if(max < nums[i]){
+            if (max < nums[i]) {
                 max = nums[i];
                 idx2 = i;
             }
         }
-        if(s[idx1]=='1' || s[idx2]=='1'){
+        if (s[idx1] == '1' || s[idx2] == '1') {
             println("NO");
             return;
         }

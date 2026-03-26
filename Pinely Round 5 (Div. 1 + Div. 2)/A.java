@@ -1,4 +1,4 @@
-import java.util.*;
+
 import java.io.*;
 
 public class A {
@@ -365,13 +365,13 @@ public class A {
     }
 
     public static void helper(int r, int x, int d, int n, char[] rounds) throws IOException {
-        if(r < x){
+        if (r < x) {
             println(n);
             return;
         }
         int count = 0, i = 0;
-        while( r >= x && i < n){
-            if(rounds[i] == '1'){
+        while (r >= x && i < n) {
+            if (rounds[i] == '1') {
                 r -= d;
                 count++;
             }

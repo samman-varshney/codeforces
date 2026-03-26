@@ -1,4 +1,4 @@
-import java.util.*;
+
 import java.io.*;
 
 public class E2162 {
@@ -400,7 +400,7 @@ public class E2162 {
         int i = 1;
         for (; i <= n && k > 0; i++) {
             if (freq[i] == 1) {
-                
+
                 if (i != nums[n - 1]) {
                     k--;
                     print(i + " ");

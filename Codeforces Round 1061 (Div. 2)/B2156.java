@@ -1,4 +1,3 @@
-import java.util.*;
 import java.io.*;
 
 public class B2156 {
@@ -360,10 +359,10 @@ public class B2156 {
 
                 String s = readString();
                 int[] queries = readIntArray(q);
-                for(int i=0; i<q; i++){
+                for (int i = 0; i < q; i++) {
                     println(helper(n, s.toCharArray(), queries[i]));
                 }
-                
+
             }
         } catch (Exception err) {
             System.out.println(err);
@@ -379,9 +378,9 @@ public class B2156 {
             }
         }
 
-        if(onlyA){
-            int rounds = query/n;
-            return rounds*1L*n + stimulate(n, s, query - rounds*n);
+        if (onlyA) {
+            int rounds = query / n;
+            return rounds * 1L * n + stimulate(n, s, query - rounds * n);
         }
 
         return stimulate(n, s, query);
@@ -391,8 +390,10 @@ public class B2156 {
         int i = 0;
         long seconds = 0;
         while (a > 0) {
-            if (s[i%n] == 'A') a -= 1;
-            else a /= 2;
+            if (s[i % n] == 'A')
+                a -= 1;
+            else
+                a /= 2;
             seconds++;
             i++;
         }

@@ -1,4 +1,3 @@
-import java.util.*;
 import java.io.*;
 
 public class A2156 {
@@ -356,9 +355,9 @@ public class A2156 {
             while (tcase-- > 0) {
                 int n = readInt();
                 int count = 0;
-                while(n > 2){
-                    count += n/3;
-                    n = n - (n/3)*2;
+                while (n > 2) {
+                    count += n / 3;
+                    n = n - (n / 3) * 2;
                 }
                 println(count);
             }
@@ -368,10 +367,9 @@ public class A2156 {
     }
 
     public static void helper(int n, int k, int[] nums) throws IOException {
-        
+
     }
 }
-
 
 // Example
 // InputCopy

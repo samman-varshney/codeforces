@@ -1,4 +1,4 @@
-import java.util.*;
+
 import java.io.*;
 
 public class B {
@@ -502,39 +502,48 @@ public class B {
         return binary;
     }
 
-       private static final int[] LEFT  = {0, -1};
-    private static final int[] RIGHT = {0,  1};
-    private static final int[] DOWN  = {1,  0};
+    private static final int[] LEFT = { 0, -1 };
+    private static final int[] RIGHT = { 0, 1 };
+    private static final int[] DOWN = { 1, 0 };
 
     // pattern names and vectors
-    private static final String[] PAT_NAMES = {"L-D", "D-L", "R-D", "D-R"};
+    private static final String[] PAT_NAMES = { "L-D", "D-L", "R-D", "D-R" };
     private static final int[][][] PATTERNS = {
-        { LEFT,  DOWN }, // left then down
-        { DOWN,  LEFT }, // down then left
-        { RIGHT, DOWN }, // right then down
-        { DOWN,  RIGHT } // down then right
+            { LEFT, DOWN }, // left then down
+            { DOWN, LEFT }, // down then left
+            { RIGHT, DOWN }, // right then down
+            { DOWN, RIGHT } // down then right
     };
 
     public static boolean canCoverAllOnes(int[][] grid) {
         int n = grid.length;
-        if (n == 0) return true;
+        if (n == 0)
+            return true;
         int m = grid[0].length;
 
         // count total ones
         int totalOnes = 0;
-        for (int[] row : grid) for (int v : row) if (v == 1) totalOnes++;
+        for (int[] row : grid)
+            for (int v : row)
+                if (v == 1)
+                    totalOnes++;
 
-        if (totalOnes == 0) return true;
+        if (totalOnes == 0)
+            return true;
 
         // find topmost 1 (first by row, then by column)
         int sr = -1, sc = -1;
-        outer:
-        for (int i = 0; i < n; i++) {
+        outer: for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
-                if (grid[i][j] == 1) { sr = i; sc = j; break outer; }
+                if (grid[i][j] == 1) {
+                    sr = i;
+                    sc = j;
+                    break outer;
+                }
             }
         }
-        if (sr == -1) return true;
+        if (sr == -1)
+            return true;
 
         // try each pattern
         for (int p = 0; p < PATTERNS.length; p++) {
@@ -554,7 +563,10 @@ public class B {
         int n = grid.length, m = grid[0].length;
         int covered = 0;
 
-        if (grid[r][c] == 1) { visited[r][c] = true; covered++; }
+        if (grid[r][c] == 1) {
+            visited[r][c] = true;
+            covered++;
+        }
 
         boolean useFirst = true;
         while (true) {
@@ -562,10 +574,12 @@ public class B {
             int nr = r + d[0], nc = c + d[1];
 
             // STOP only if next move is out-of-bounds
-            if (nr < 0 || nr >= n || nc < 0 || nc >= m) break;
+            if (nr < 0 || nr >= n || nc < 0 || nc >= m)
+                break;
 
             // make the move
-            r = nr; c = nc;
+            r = nr;
+            c = nc;
             if (grid[r][c] == 1 && !visited[r][c]) {
                 visited[r][c] = true;
                 covered++;
