@@ -1,8 +1,9 @@
+package Rating1400;
+
 import java.util.*;
 import java.io.*;
 
-@SuppressWarnings("unused")
-public class biolerplate {
+public class C2034 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -170,31 +171,6 @@ public class biolerplate {
             start++;
             end--;
         }
-    }
-
-    // swap to numbers
-    public static <T> void swap(T[] arr, int i, int j) {
-        T temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
-    }
-
-    public static void swap(int[] arr, int i, int j) {
-        int temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
-    }
-
-    public static void swap(long[] arr, int i, int j) {
-        long temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
-    }
-
-    public static void swap(char[] arr, int i, int j) {
-        char temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
     }
 
     // -----------------read methods-------------------------//
@@ -432,7 +408,12 @@ public class biolerplate {
         try {
             int tcase = readInt();
             while (tcase-- > 0) {
-
+                int[] x = readIntArray(2);
+                char[][] grid = new char[x[0]][x[1]];
+                for (int i = 0; i < x[0]; i++) {
+                    grid[i] = readString().toCharArray();
+                }
+                helper(x[0], x[1], grid);
             }
         } catch (Exception err) {
             System.err.println("An unexpected error occurred:");
@@ -440,7 +421,48 @@ public class biolerplate {
         }
     }
 
-    public static void helper() throws IOException {
+    public static void helper(int n, int m, char[][] grid) throws IOException {
+        int[][] visited = new int[n][m];
+        int[][] cycle = new int[n][m];
+        int[][] covered = new int[n][m];
+        int total = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (covered[i][j] == 0 && grid[i][j] != '?') {
+                    dfs(i, j, grid, covered, visited, cycle);
+                }
+                if (cycle[i][j] == 1) {
+                    total++;
+                }
+            }
+        }
+        System.out.println(total);
+    }
 
+    static int dfs(int x, int y, char[][] grid, int[][] covered, int[][] visited, int[][] cycle) {
+        int n = grid.length, m = grid[0].length;
+
+        if ((visited[x][y] == 1) || cycle[x][y] == 1) {
+            return 1;
+        }
+        covered[x][y] = 1;
+        visited[x][y] = 1;
+        int res = 0;
+        if (res == 0 && (grid[x][y] == '?' || grid[x][y] == 'R') && y + 1 < m) {
+            res = dfs(x, y + 1, grid, covered, visited, cycle);
+        }
+        if (res == 0 && (grid[x][y] == '?' || grid[x][y] == 'L') && y - 1 >= 0) {
+            res = dfs(x, y - 1, grid, covered, visited, cycle);
+        }
+        if (res == 0 && (grid[x][y] == '?' || grid[x][y] == 'D') && x + 1 < n) {
+            res = dfs(x + 1, y, grid, covered, visited, cycle);
+        }
+        if (res == 0 && (grid[x][y] == '?' || grid[x][y] == 'U') && x - 1 >= 0) {
+            res = dfs(x - 1, y, grid, covered, visited, cycle);
+        }
+
+        cycle[x][y] = res;
+        visited[x][y] = 0;
+        return res;
     }
 }

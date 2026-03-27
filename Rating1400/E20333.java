@@ -1,8 +1,9 @@
+package Rating1400;
+
 import java.util.*;
 import java.io.*;
 
-@SuppressWarnings("unused")
-public class biolerplate {
+public class E20333 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -172,31 +173,6 @@ public class biolerplate {
         }
     }
 
-    // swap to numbers
-    public static <T> void swap(T[] arr, int i, int j) {
-        T temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
-    }
-
-    public static void swap(int[] arr, int i, int j) {
-        int temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
-    }
-
-    public static void swap(long[] arr, int i, int j) {
-        long temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
-    }
-
-    public static void swap(char[] arr, int i, int j) {
-        char temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
-    }
-
     // -----------------read methods-------------------------//
     public static int readInt() throws IOException {
         return Integer.parseInt(br.readLine().trim());
@@ -246,7 +222,7 @@ public class biolerplate {
         int[] arr = new int[n];
         String[] input = br.readLine().split(" ");
         for (int i = 0; i < n; i++) {
-            arr[i] = Integer.parseInt(input[i]);
+            arr[i] = Integer.parseInt(input[i]) - 1;
         }
         return arr;
     }
@@ -426,13 +402,39 @@ public class biolerplate {
         bw.flush();
     }
 
+    public static <T> void swap(T[] arr, int i, int j) {
+        T temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
+    public static void swap(int[] arr, int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
+    public static void swap(long[] arr, int i, int j) {
+        long temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
+    public static void swap(char[] arr, int i, int j) {
+        char temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
     // -----------------------------------------------------//
 
     public static void main(String[] args) {
         try {
             int tcase = readInt();
             while (tcase-- > 0) {
-
+                int n = readInt();
+                int[] nums = readIntArray(n);
+                helper(n, nums);
             }
         } catch (Exception err) {
             System.err.println("An unexpected error occurred:");
@@ -440,7 +442,25 @@ public class biolerplate {
         }
     }
 
-    public static void helper() throws IOException {
+    public static void helper(int n, int[] nums) throws IOException {
+        int[] indices = new int[n];
+        for (int i = 0; i < n; i++) {
+            indices[nums[i]] = i;
+        }
 
+        int ops = 0;
+        for (int i = 0; i < n; i++) {
+            if (i != nums[i] && i != nums[nums[i]]) {
+                ops++;
+                int x = nums[i];
+                int k = nums[x];
+                int y = indices[i];
+                swap(nums, x, y);
+                indices[k] = indices[i];
+                indices[i] = x;
+            }
+        }
+
+        System.out.println(ops);
     }
 }
