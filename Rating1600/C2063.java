@@ -449,6 +449,7 @@ public class C2063 {
             return;
         }
 
+        @SuppressWarnings("unchecked")
         ArrayList<Integer>[] adj = new ArrayList[n + 1];
         int[] deg = new int[n + 1];
         for (int i = 1; i <= n; i++)
