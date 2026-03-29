@@ -470,6 +470,7 @@ public class C2063 {
         Arrays.sort(ids, (x, y) -> Integer.compare(deg[y], deg[x]));
 
         // Use a Set for faster adjacency checks
+        @SuppressWarnings("unchecked")
         HashSet<Integer>[] fastAdj = new HashSet[n + 1];
         for (int i = 1; i <= n; i++)
             fastAdj[i] = new HashSet<>(adj[i]);
