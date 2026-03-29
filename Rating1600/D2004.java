@@ -1,43 +1,13 @@
+package Rating1600;
+
 import java.util.*;
 import java.io.*;
 
-@SuppressWarnings("unused")
-public class biolerplate {
+public class D2004 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     private static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-    // -------------------------DSU--------------------------------
-    static int[] parent, size;
-
-    static int find(int u) {
-        if (u == parent[u])
-            return u;
-        return parent[u] = find(parent[u]);
-    }
-
-    static void union(int u, int v) {
-        int pu = find(u);
-        int pv = find(v);
-        if (pu == pv)
-            return;
-        if (size[pu] > size[pv]) {
-            size[pu] += size[pv];
-            parent[pv] = pu;
-        } else {
-            size[pv] += size[pu];
-            parent[pu] = pv;
-        }
-    }
-
-    static void initialDS(int n) {
-        parent = new int[n];
-        size = new int[n];
-        for (int i = 0; i < n; i++) {
-            parent[i] = i;
-            size[i] = 1;
-        }
-    }
 
     // segment tree
     public class SegementTree {
@@ -229,22 +199,6 @@ public class biolerplate {
     }
 
     // -----------------read methods-------------------------//
-    static StringTokenizer st;
-
-    static int nextInt() throws IOException {
-        while (st == null || !st.hasMoreTokens()) {
-            st = new StringTokenizer(br.readLine());
-        }
-        return Integer.parseInt(st.nextToken());
-    }
-
-    static long nextLong() throws IOException {
-        while (st == null || !st.hasMoreTokens()) {
-            st = new StringTokenizer(br.readLine());
-        }
-        return Long.parseLong(st.nextToken());
-    }
-
     public static int readInt() throws IOException {
         return Integer.parseInt(br.readLine().trim());
     }
@@ -263,10 +217,6 @@ public class biolerplate {
 
     public static String readString() throws IOException {
         return br.readLine().trim();
-    }
-
-    public static String[] readStringArray(int n) throws IOException {
-        return br.readLine().split(" ");
     }
 
     public static long[] readLongArray(int n) throws IOException {
@@ -300,6 +250,10 @@ public class biolerplate {
             arr[i] = Integer.parseInt(input[i]);
         }
         return arr;
+    }
+
+    public static String[] readStringArray(int n) throws IOException {
+        return br.readLine().split(" ");
     }
 
     public static int[][] read2DArray(int n, int m) throws IOException {
@@ -478,12 +432,31 @@ public class biolerplate {
     }
 
     // -----------------------------------------------------//
+    static StringTokenizer st;
+
+    static int nextInt() throws IOException {
+        while (st == null || !st.hasMoreTokens()) {
+            st = new StringTokenizer(br.readLine());
+        }
+        return Integer.parseInt(st.nextToken());
+    }
+
+    static long nextLong() throws IOException {
+        while (st == null || !st.hasMoreTokens()) {
+            st = new StringTokenizer(br.readLine());
+        }
+        return Long.parseLong(st.nextToken());
+    }
 
     public static void main(String[] args) {
         try {
             int tcase = readInt();
             while (tcase-- > 0) {
-
+                int n = nextInt();
+                int q = nextInt();
+                String[] portals = readStringArray(n);
+                int[][] queries = read2DArray(q, 2);
+                helper(n, q, portals, queries);
             }
         } catch (Exception err) {
             System.err.println("An unexpected error occurred:");
@@ -491,7 +464,64 @@ public class biolerplate {
         }
     }
 
-    public static void helper() throws IOException {
+    static int[] parent, size;
 
+    static int find(int u) {
+        if (u == parent[u])
+            return u;
+        return parent[u] = find(parent[u]);
+    }
+
+    static void union(int u, int v) {
+        int pu = find(u);
+        int pv = find(v);
+        if (pu == pv)
+            return;
+        if (size[pu] > size[pv]) {
+            size[pu] += size[pv];
+            parent[pv] = pu;
+        } else {
+            size[pv] += size[pu];
+            parent[pu] = pv;
+        }
+    }
+
+    static void initialDS(int n) {
+        parent = new int[n];
+        size = new int[n];
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+            size[i] = 1;
+        }
+    }
+
+    public static void helper(int n, int q, String[] portals, int[][] queries) throws IOException {
+        // union blue cities
+        initialDS(n);
+        solve(portals, 'B');
+        solve(portals, 'G');
+        solve(portals, 'Y');
+        solve(portals, 'R');
+
+        for (int[] qy : queries) {
+            if (find(qy[0] - 1) == find(qy[1] - 1)) {
+                System.out.println(Math.abs(qy[0] - qy[1]));
+            } else {
+                System.out.println(-1);
+            }
+        }
+
+    }
+
+    static void solve(String[] portals, char color) {
+        int prev = -1;
+        for (int i = 0; i < portals.length; i++) {
+            if (portals[i].charAt(0) == color || portals[i].charAt(1) == color) {
+                if (prev != -1) {
+                    union(prev, i);
+                }
+                prev = i;
+            }
+        }
     }
 }

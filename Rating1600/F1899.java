@@ -1,8 +1,10 @@
+package Rating1600;
+
 import java.util.*;
 import java.io.*;
 
 @SuppressWarnings("unused")
-public class biolerplate {
+public class F1899 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -305,7 +307,7 @@ public class biolerplate {
     public static int[][] read2DArray(int n, int m) throws IOException {
         int[][] arr = new int[n][m];
         for (int i = 0; i < n; i++) {
-            String[] parts = br.readLine().trim().split("\\s+");
+            String[] parts = br.readLine().trim().split(" ");
             for (int j = 0; j < m; j++) {
                 arr[i][j] = Integer.parseInt(parts[j]);
             }
