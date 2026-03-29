@@ -1,9 +1,9 @@
-package Rating1500;
+package Rating1600;
 
 import java.util.*;
 import java.io.*;
 
-public class C2108 {
+public class C2063 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -434,8 +434,8 @@ public class C2108 {
             int tcase = readInt();
             while (tcase-- > 0) {
                 int n = readInt();
-                int[] nums = readIntArray(n);
-                helper(n, nums);
+                int[][] edges = read2DArray(n - 1, 2);
+                helper(n, edges);
             }
         } catch (Exception err) {
             System.err.println("An unexpected error occurred:");
@@ -443,70 +443,55 @@ public class C2108 {
         }
     }
 
-    static int[] parent, size;
-
-    static void union(int u, int v) {
-        int pu = find(u);
-        int pv = find(v);
-        if (pu == pv)
+    public static void helper(int n, int[][] edges) throws IOException {
+        if (n == 2) {
+            System.out.println(0);
             return;
-        if (size[pu] > size[pv]) {
-            parent[pv] = pu;
-            size[pu] += size[pv];
-        } else {
-            parent[pu] = pv;
-            size[pv] += size[pu];
         }
-    }
 
-    static int find(int u) {
-        if (u == parent[u]) {
-            return u;
+        ArrayList<Integer>[] adj = new ArrayList[n + 1];
+        int[] deg = new int[n + 1];
+        for (int i = 1; i <= n; i++)
+            adj[i] = new ArrayList<>();
+
+        for (int i = 0; i < n - 1; i++) {
+            int u = readInt();
+            int v = readInt();
+            deg[u]++;
+            deg[v]++;
+            adj[u].add(v);
+            adj[v].add(u);
         }
-        return parent[u] = find(parent[u]);
-    }
 
-    public static void helper(int n, int[] nums) throws IOException {
-        parent = new int[n];
-        size = new int[n];
-        int[][] arr = new int[n][2];
+        // Sort indices by degree descending
+        Integer[] ids = new Integer[n];
+        for (int i = 0; i < n; i++)
+            ids[i] = i + 1;
+        Arrays.sort(ids, (x, y) -> Integer.compare(deg[y], deg[x]));
 
+        // Use a Set for faster adjacency checks
+        HashSet<Integer>[] fastAdj = new HashSet[n + 1];
+        for (int i = 1; i <= n; i++)
+            fastAdj[i] = new HashSet<>(adj[i]);
+
+        long maxAns = 0;
         for (int i = 0; i < n; i++) {
-            size[i] = 1;
-            parent[i] = i;
-            arr[i][0] = i;
-            arr[i][1] = nums[i];
-        }
+            int u = ids[i];
+            for (int j = i + 1; j < n; j++) {
+                int v = ids[j];
 
-        Arrays.sort(arr, (a, b) -> {
-            if (a[1] != b[1]) {
-                return b[1] - a[1];
-            }
-            return a[0] - b[0];
-        });
+                // This is the "Pruning" that makes it O(N)
+                // If the absolute best potential (deg+deg-1) can't beat maxAns, stop searching
+                // for this 'i'
+                if (deg[u] + deg[v] - 1 <= maxAns)
+                    break;
 
-        int prev = 0;
-        int i = 1;
-        while (i < n) {
-            if (nums[prev] <= nums[i]) {
-                union(prev, i);
-            } else {
-                while (i < n && nums[i - 1] >= nums[i]) {
-                    union(i - 1, i);
-                    i++;
-                }
-            }
-            prev = i++;
-        }
-        int clones = 1;
-        int node = arr[0][0];
-        for (int j = 1; j < n; j++) {
-            if (find(node) != find(arr[j][0])) {
-                clones++;
-                union(node, arr[j][0]);
+                int current = deg[u] + deg[v] - (fastAdj[u].contains(v) ? 2 : 1);
+                maxAns = Math.max(maxAns, current);
             }
         }
-        System.out.println(clones);
+        System.out.println(maxAns);
     }
-
 }
+
+// ye question design krne wala apni gand mraye

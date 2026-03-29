@@ -3,7 +3,7 @@ package Rating1500;
 import java.util.*;
 import java.io.*;
 
-public class C2108 {
+public class E1851 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -427,86 +427,104 @@ public class C2108 {
         bw.flush();
     }
 
+    static StringTokenizer st;
+
+    static int nextInt() throws IOException {
+        while (st == null || !st.hasMoreTokens()) {
+            st = new StringTokenizer(br.readLine());
+        }
+        return Integer.parseInt(st.nextToken());
+    }
+
+    static long nextLong() throws IOException {
+        while (st == null || !st.hasMoreTokens()) {
+            st = new StringTokenizer(br.readLine());
+        }
+        return Long.parseLong(st.nextToken());
+    }
+
     // -----------------------------------------------------//
 
     public static void main(String[] args) {
         try {
-            int tcase = readInt();
+            int tcase = nextInt();
+
             while (tcase-- > 0) {
-                int n = readInt();
-                int[] nums = readIntArray(n);
-                helper(n, nums);
+
+                int n = nextInt();
+                int k = nextInt();
+
+                long[] cost = new long[n];
+                for (int i = 0; i < n; i++)
+                    cost[i] = nextLong();
+
+                int[] potion = new int[k];
+                for (int i = 0; i < k; i++)
+                    potion[i] = nextInt();
+
+                List<List<Integer>> recipe = new ArrayList<>();
+
+                for (int i = 0; i < n; i++) {
+                    List<Integer> temp = new ArrayList<>();
+
+                    int m = nextInt();
+                    for (int j = 0; j < m; j++) {
+                        temp.add(nextInt());
+                    }
+
+                    recipe.add(temp);
+                }
+
+                helper(n, k, cost, potion, recipe);
             }
+
         } catch (Exception err) {
             System.err.println("An unexpected error occurred:");
             err.printStackTrace();
         }
     }
 
-    static int[] parent, size;
+    public static void helper(int n, int k, long[] cost, int[] potion, List<List<Integer>> recipe) throws IOException {
 
-    static void union(int u, int v) {
-        int pu = find(u);
-        int pv = find(v);
-        if (pu == pv)
-            return;
-        if (size[pu] > size[pv]) {
-            parent[pv] = pu;
-            size[pu] += size[pv];
-        } else {
-            parent[pu] = pv;
-            size[pv] += size[pu];
+        long[] dp = new long[n + 1];
+        List<List<Integer>> adj = new ArrayList<>();
+        Arrays.fill(dp, -1);
+
+        for (int i = 0; i <= n; i++) {
+            adj.add(new ArrayList<>());
         }
-    }
-
-    static int find(int u) {
-        if (u == parent[u]) {
-            return u;
-        }
-        return parent[u] = find(parent[u]);
-    }
-
-    public static void helper(int n, int[] nums) throws IOException {
-        parent = new int[n];
-        size = new int[n];
-        int[][] arr = new int[n][2];
-
+        // create adj
         for (int i = 0; i < n; i++) {
-            size[i] = 1;
-            parent[i] = i;
-            arr[i][0] = i;
-            arr[i][1] = nums[i];
+            for (int nbr : recipe.get(i)) {
+                adj.get(i + 1).add(nbr);
+            }
+            // marking potion which have to buy any how
+            if (recipe.get(i).size() == 0) {
+                dp[i + 1] = cost[i];
+            }
         }
 
-        Arrays.sort(arr, (a, b) -> {
-            if (a[1] != b[1]) {
-                return b[1] - a[1];
-            }
-            return a[0] - b[0];
-        });
+        // marking potion which he had already
+        for (int i = 0; i < k; i++) {
+            dp[potion[i]] = 0;
+        }
 
-        int prev = 0;
-        int i = 1;
-        while (i < n) {
-            if (nums[prev] <= nums[i]) {
-                union(prev, i);
-            } else {
-                while (i < n && nums[i - 1] >= nums[i]) {
-                    union(i - 1, i);
-                    i++;
-                }
-            }
-            prev = i++;
+        for (int i = 1; i <= n; i++) {
+            System.out.print(getCost(i, adj, dp, cost) + " ");
         }
-        int clones = 1;
-        int node = arr[0][0];
-        for (int j = 1; j < n; j++) {
-            if (find(node) != find(arr[j][0])) {
-                clones++;
-                union(node, arr[j][0]);
-            }
-        }
-        System.out.println(clones);
+        System.out.println();
     }
 
+    static long getCost(int node, List<List<Integer>> adj, long[] dp, long[] cost) {
+        if (dp[node] != -1) {
+            return dp[node];
+        }
+
+        long makingCost = 0;
+        for (int nbr : adj.get(node)) {
+            makingCost += getCost(nbr, adj, dp, cost);
+        }
+
+        return dp[node] = Math.min(makingCost, cost[node - 1]);
+    }
 }

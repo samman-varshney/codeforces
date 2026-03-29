@@ -1,9 +1,9 @@
-package Rating1500;
+package Rating1600;
 
 import java.util.*;
 import java.io.*;
 
-public class C2108 {
+public class E1833 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -247,7 +247,7 @@ public class C2108 {
         int[] arr = new int[n];
         String[] input = br.readLine().split(" ");
         for (int i = 0; i < n; i++) {
-            arr[i] = Integer.parseInt(input[i]);
+            arr[i] = Integer.parseInt(input[i]) - 1;
         }
         return arr;
     }
@@ -443,70 +443,43 @@ public class C2108 {
         }
     }
 
-    static int[] parent, size;
-
-    static void union(int u, int v) {
-        int pu = find(u);
-        int pv = find(v);
-        if (pu == pv)
-            return;
-        if (size[pu] > size[pv]) {
-            parent[pv] = pu;
-            size[pu] += size[pv];
-        } else {
-            parent[pu] = pv;
-            size[pv] += size[pu];
-        }
-    }
-
-    static int find(int u) {
-        if (u == parent[u]) {
-            return u;
-        }
-        return parent[u] = find(parent[u]);
-    }
-
     public static void helper(int n, int[] nums) throws IOException {
-        parent = new int[n];
-        size = new int[n];
-        int[][] arr = new int[n][2];
+        List<HashSet<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            adj.add(new HashSet<>());
+        }
 
         for (int i = 0; i < n; i++) {
-            size[i] = 1;
-            parent[i] = i;
-            arr[i][0] = i;
-            arr[i][1] = nums[i];
+            adj.get(i).add(nums[i]);
+            adj.get(nums[i]).add(i);
         }
 
-        Arrays.sort(arr, (a, b) -> {
-            if (a[1] != b[1]) {
-                return b[1] - a[1];
-            }
-            return a[0] - b[0];
-        });
-
-        int prev = 0;
-        int i = 1;
-        while (i < n) {
-            if (nums[prev] <= nums[i]) {
-                union(prev, i);
-            } else {
-                while (i < n && nums[i - 1] >= nums[i]) {
-                    union(i - 1, i);
-                    i++;
+        int min = 0, max = 0;
+        int open = 0;
+        int[] visited = new int[n];
+        for (int i = 0; i < n; i++) {
+            if (visited[i] == 0) {
+                max++;
+                if (isCycle(i, -1, adj, visited)) {
+                    min++;
+                } else {
+                    open = 1;
                 }
             }
-            prev = i++;
         }
-        int clones = 1;
-        int node = arr[0][0];
-        for (int j = 1; j < n; j++) {
-            if (find(node) != find(arr[j][0])) {
-                clones++;
-                union(node, arr[j][0]);
-            }
-        }
-        System.out.println(clones);
+        System.out.println(min + open + " " + max);
     }
 
+    static boolean isCycle(int node, int parent, List<HashSet<Integer>> adj, int[] visited) {
+        visited[node] = 1;
+        for (int nbr : adj.get(node)) {
+            if (visited[nbr] == 0) {
+                if (isCycle(nbr, node, adj, visited))
+                    return true;
+            } else if (parent != nbr) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

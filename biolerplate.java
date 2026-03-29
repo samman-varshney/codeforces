@@ -198,6 +198,22 @@ public class biolerplate {
     }
 
     // -----------------read methods-------------------------//
+    static StringTokenizer st;
+
+    static int nextInt() throws IOException {
+        while (st == null || !st.hasMoreTokens()) {
+            st = new StringTokenizer(br.readLine());
+        }
+        return Integer.parseInt(st.nextToken());
+    }
+
+    static long nextLong() throws IOException {
+        while (st == null || !st.hasMoreTokens()) {
+            st = new StringTokenizer(br.readLine());
+        }
+        return Long.parseLong(st.nextToken());
+    }
+
     public static int readInt() throws IOException {
         return Integer.parseInt(br.readLine().trim());
     }
