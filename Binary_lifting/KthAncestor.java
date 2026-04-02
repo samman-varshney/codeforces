@@ -1,7 +1,10 @@
+package Binary_lifting;
+
 import java.util.*;
 import java.io.*;
 
-public class biolerplate {
+@SuppressWarnings("unused")
+public class KthAncestor {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -35,6 +38,75 @@ public class biolerplate {
         for (int i = 0; i < n; i++) {
             parent[i] = i;
             size[i] = 1;
+        }
+    }
+
+    // segment tree
+    public class SegementTree {
+        int[][] tree;
+        int[] lazy;
+
+        public SegementTree(int n) {
+            tree = new int[4 * n][2];
+            lazy = new int[4 * n];
+        }
+
+        public void build(int arr[], int v, int l, int r) {
+            if (l == r) {
+                tree[v][0] = arr[l];
+                tree[v][1] = arr[l] * arr[l];
+            } else {
+                int mid = (l + r) / 2;
+                build(arr, v * 2 + 1, l, mid);
+                build(arr, v * 2 + 2, mid + 1, r);
+                tree[v][0] = tree[v * 2 + 1][0] + tree[v * 2 + 2][0];
+                tree[v][1] = tree[v * 2 + 1][1] + tree[v * 2 + 2][1];
+            }
+        }
+
+        public void removeLaziness(int v, int l, int r) {
+            if (lazy[v] != 0) {
+                int len = (r - l + 1);
+                tree[v][1] += 2 * lazy[v] * tree[v][0] + len * lazy[v] * lazy[v];
+                tree[v][0] += lazy[v] * len;
+
+                if (l != r) {
+                    lazy[v * 2 + 1] += lazy[v];
+                    lazy[v * 2 + 2] += lazy[v];
+                }
+                lazy[v] = 0;
+            }
+        }
+
+        public int query(int v, int l, int r, int ql, int qr) {
+            removeLaziness(v, l, r);
+            if (ql <= l && qr >= r) {
+                return tree[v][1];
+            } else if (ql > r || qr < l) {
+                return 0;
+            } else {
+                int mid = (l + r) / 2;
+                int left = query(v * 2 + 1, l, mid, ql, qr);
+                int right = query(v * 2 + 2, mid + 1, r, ql, qr);
+                return left + right;
+            }
+        }
+
+        public void updateRange(int v, int l, int r, int ql, int qr, int value) {
+            removeLaziness(v, l, r);
+            if (ql > r || qr < l) {
+                return;
+            }
+            if (ql <= l && qr >= r) {
+                lazy[v] += value;
+                removeLaziness(v, l, r);
+                return;
+            }
+            int mid = (l + r) / 2;
+            updateRange(v * 2 + 1, l, mid, ql, qr, value);
+            updateRange(v * 2 + 2, mid + 1, r, ql, qr, value);
+            tree[v][0] = tree[v * 2 + 1][0] + tree[v * 2 + 2][0];
+            tree[v][1] = tree[v * 2 + 1][1] + tree[v * 2 + 2][1];
         }
     }
 
@@ -205,30 +277,6 @@ public class biolerplate {
         for (int i = 0; i < n; i++)
             arr[i] = Long.parseLong(tokens[i]);
         return arr;
-    }
-
-    public static List<Integer> intList() throws IOException {
-        List<Integer> a = new ArrayList<>();
-        String[] tokens = br.readLine().trim().split(" ");
-        for (String s : tokens)
-            a.add(Integer.parseInt(s));
-        return a;
-    }
-
-    public static List<Long> longList() throws IOException {
-        List<Long> a = new ArrayList<>();
-        String[] tokens = br.readLine().trim().split(" ");
-        for (String s : tokens)
-            a.add(Long.parseLong(s));
-        return a;
-    }
-
-    public static List<String> stringList() throws IOException {
-        List<String> a = new ArrayList<>();
-        String[] tokens = br.readLine().trim().split(" ");
-        for (String s : tokens)
-            a.add(s);
-        return a;
     }
 
     public static double[] readDoubleArray(int n) throws IOException {
