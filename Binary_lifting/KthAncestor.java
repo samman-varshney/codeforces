@@ -480,11 +480,25 @@ public class KthAncestor {
     }
 
     // -----------------------------------------------------//
+    static int n, q;
+    static int[][] queries;
+    static int limit = 17;
+    static int[][] dp;
 
     public static void main(String[] args) {
         try {
-            int tcase = readInt();
+            int tcase = 1;
             while (tcase-- > 0) {
+                n = nextInt();
+                q = nextInt();
+
+                parent = new int[n + 1];
+                for (int i = 2; i <= n; i++) {
+                    parent[i] = nextInt();
+                }
+
+                queries = read2DArray(q, 2);
+                helper();
 
             }
         } catch (Exception err) {
@@ -493,7 +507,30 @@ public class KthAncestor {
         }
     }
 
-    public static void helper() throws IOException {
+    static void build() {
+        dp = new int[limit + 1][n + 1];
+        dp[0] = Arrays.copyOf(parent, n + 1);
 
+        for (int i = 1; i <= limit; i++) {
+            for (int j = 0; j <= n; j++) {
+                dp[i][j] = dp[i - 1][dp[i - 1][j]];
+            }
+        }
+    }
+
+    static int getKthAncestor(int a, int k) {
+        for (int i = 0; i <= limit; i++) {
+            if (((k >> i) & 1) == 1) {
+                a = dp[i][a];
+            }
+        }
+        return a == 0 ? -1 : a;
+    }
+
+    public static void helper() throws IOException {
+        build();
+        for (int[] qt : queries) {
+            println(getKthAncestor(qt[0], qt[1]));
+        }
     }
 }
