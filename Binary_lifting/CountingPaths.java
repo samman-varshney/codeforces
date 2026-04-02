@@ -440,7 +440,7 @@ public class CountingPaths {
 
     public static void main(String[] args) {
         try {
-            int tcase = readInt();
+            int tcase = 1;
             while (tcase-- > 0) {
                 n = nextInt();
                 m = nextInt();
@@ -475,6 +475,7 @@ public class CountingPaths {
                 dfs(u, v);
             }
         }
+
     }
 
     static void build() {
@@ -496,8 +497,64 @@ public class CountingPaths {
         return a;
     }
 
-    public static void helper() throws IOException {
-        depth = new int[n + 1];
+    static int getLCA(int a, int b) {
+        if (depth[a] > depth[b]) {
+            int temp = a;
+            a = b;
+            b = temp;
+        }
 
+        int diff = depth[b] - depth[a];
+        b = getKthAncestor(b, diff);
+
+        if (a == b)
+            return a;
+
+        for (int i = limit; i >= 0; i--) {
+            if (dp[i][a] != dp[i][b]) {
+                a = dp[i][a];
+                b = dp[i][b];
+            }
+        }
+
+        return parent[b];
+    }
+
+    static int[] prefix;
+
+    static void dfs2(int v, int p) {
+        for (int u : adj.get(v)) {
+            if (u != p) {
+                dfs2(u, v);
+                prefix[v] += prefix[u];
+            }
+        }
+    }
+
+    public static void helper() throws IOException {
+        parent = new int[n + 1];
+        depth = new int[n + 1];
+        dfs(1, 0);
+        dp = new int[limit + 1][n + 1];
+        build();
+        prefix = new int[n + 1];
+
+        for (int[] p : paths) {
+            int u = p[0], v = p[1];
+            int lca = getLCA(u, v);
+
+            prefix[u]++;
+            prefix[v]++;
+            prefix[lca]--;
+            if (parent[lca] != 0)
+                prefix[parent[lca]]--;
+        }
+
+        dfs2(1, 0);
+
+        for (int i = 1; i <= n; i++) {
+            print(prefix[i] + " ");
+        }
+        println();
     }
 }

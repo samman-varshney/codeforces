@@ -468,8 +468,8 @@ public class biolerplate {
 
     static void initialiseBL(int n) {
         int[] parent = new int[n];
-        dfs(0, -1, parent);
         depth = new int[n];
+        dfs(0, -1, parent);
         table = new int[limit][n];
         build(parent);
     }

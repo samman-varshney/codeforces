@@ -482,57 +482,51 @@ public class PathSum {
     // -----------------------------------------------------//
     static int n, q;
     static int[] values;
-    static List<List<Integer>> adj, queries;
+    static List<List<Integer>> adj;
     static int[] start, end, lt;
     static int time;
     static int[] t;
+    static boolean[] vis;
 
     public static void main(String[] args) {
         try {
-            int tcase = readInt();
-            while (tcase-- > 0) {
-                n = nextInt();
-                values = readIntArray(n);
-                adj = new ArrayList<>();
-                for (int i = 0; i < n; i++)
-                    adj.add(new ArrayList<>());
-                for (int i = 0; i < n; i++) {
-                    int p = nextInt() - 1;
-                    if (i == p)
-                        continue;
-                    adj.get(p).add(i);
-                }
-                q = nextInt();
-                queries = new ArrayList<>();
-                for (int i = 0; i < q; i++) {
-                    String[] in = br.readLine().split(" ");
-                    List<Integer> temp = new ArrayList<>();
-                    for (String s : in) {
-                        temp.add(Integer.parseInt(s));
-                    }
-                    queries.add(temp);
-                }
-                helper();
+            n = nextInt();
+            q = nextInt(); // ✅ FIX 1
+
+            values = readIntArray(n);
+
+            adj = new ArrayList<>();
+            for (int i = 0; i < n; i++)
+                adj.add(new ArrayList<>());
+
+            for (int i = 0; i < n - 1; i++) { // ✅ FIX 2
+                int u = nextInt() - 1;
+                int v = nextInt() - 1;
+                adj.get(u).add(v);
+                adj.get(v).add(u);
             }
+
+            helper();
+
         } catch (Exception err) {
-            System.err.println("An unexpected error occurred:");
             err.printStackTrace();
         }
     }
 
     static void dfs(int v, int p) {
+        vis[v] = true;
+
         lt[time] = values[v];
-        start[v] = time;
-        time++;
+        start[v] = time++;
 
         for (int u : adj.get(v)) {
-            if (u != p) {
+            if (u != p && !vis[u]) { // ✅ FIX 3
                 dfs(u, v);
             }
         }
+
         lt[time] = -values[v];
-        end[v] = time;
-        time++;
+        end[v] = time++;
     }
 
     static void build(int v, int l, int r) {
@@ -546,52 +540,59 @@ public class PathSum {
         }
     }
 
-    static void udpate(int v, int tl, int tr, int idx, int val) {
-        if (tl == idx && tr == idx) {
+    static void update(int v, int tl, int tr, int idx, int val) {
+        if (tl == tr) {
             t[v] = val;
-        } else {
-            int mid = (tl + tr) / 2;
-            if (idx <= mid) {
-                udpate(2 * v, tl, mid, idx, val);
-            } else {
-                udpate(2 * v + 1, mid + 1, tr, idx, val);
-            }
-            t[v] = t[2 * v] + t[2 * v + 1];
+            return;
         }
+        int mid = (tl + tr) / 2;
+        if (idx <= mid)
+            update(2 * v, tl, mid, idx, val);
+        else
+            update(2 * v + 1, mid + 1, tr, idx, val);
+
+        t[v] = t[2 * v] + t[2 * v + 1];
     }
 
-    static int prefix(int v, int tl, int tr, int l, int r) {
-        if (tl >= l && tr <= r) {
-            return t[v];
-        } else if (tl > r || tr < l) {
+    static int query(int v, int tl, int tr, int l, int r) {
+        if (l > r)
             return 0;
-        } else {
-            int mid = (tl + tr) / 2;
-            return prefix(2 * v, tl, mid, l, r) +
-                    prefix(2 * v + 1, mid + 1, tr, l, r);
-        }
+        if (tl == l && tr == r)
+            return t[v];
+
+        int mid = (tl + tr) / 2;
+        return query(2 * v, tl, mid, l, Math.min(r, mid)) +
+                query(2 * v + 1, mid + 1, tr, Math.max(l, mid + 1), r);
     }
 
     public static void helper() throws IOException {
         start = new int[n];
         end = new int[n];
-        lt = new int[n];
+        lt = new int[2 * n];
+        vis = new boolean[n];
         time = 0;
 
         dfs(0, -1);
 
-        t = new int[4 * n];
+        t = new int[4 * 2 * n];
+        build(1, 0, 2 * n - 1);
 
-        build(1, 0, n - 1);
+        while (q-- > 0) {
+            int type = nextInt();
 
-        for (List<Integer> qt : queries) {
-            if (qt.get(0) == 1) {
-                udpate(1, 0, n - 1, start[qt.get(n)], qt.get(n));
-                udpate(1, 0, n - 1, end[qt.get(n)], -qt.get(2));
+            if (type == 1) {
+                int node = nextInt() - 1;
+                int val = nextInt();
+
+                values[node] = val;
+
+                update(1, 0, 2 * n - 1, start[node], val);
+                update(1, 0, 2 * n - 1, end[node], -val);
+
             } else {
-                println(prefix(1, 0, n - 1, 0, start[qt.get(1)]));
+                int node = nextInt() - 1;
+                System.out.println(query(1, 0, 2 * n - 1, 0, start[node]));
             }
         }
-
     }
 }
