@@ -483,10 +483,9 @@ public class TreeQuery {
     static List<List<Integer>> adj;
     static int[][] queries;
     static int n, q;
-    static int[] lt, start, end;
+    static int[] start, end;
     static int time;
-    static int[] values;
-    static int[] t, lazy;
+    static int[] tmin, tcount, lazy;
 
     public static void main(String[] args) {
         try {
@@ -517,50 +516,110 @@ public class TreeQuery {
     }
 
     static void dfs(int node, int parent) {
-        time++;
-        lt[time] = values[node];
-        start[node] = time;
-
+        start[node] = ++time;
         for (int child : adj.get(node)) {
             if (child != parent) {
                 dfs(child, node);
             }
         }
-
         end[node] = time;
     }
 
     static void build(int v, int l, int r) {
         if (l == r) {
-            t[v] = values[l];
+            tmin[v] = 0;
+            tcount[v] = 1;
         } else {
             int mid = (l + r) / 2;
             build(2 * v, l, mid);
             build(2 * v + 1, mid + 1, r);
 
-            t[v] = t[2 * v] + t[2 * v + 1];
+            pull(v);
+        }
+    }
+
+    static void pull(int v) {
+        tmin[v] = min(tmin[2 * v], tmin[2 * v + 1]);
+        tcount[v] = 0;
+        if (tmin[v] == tmin[2 * v]) {
+            tcount[v] += tcount[2 * v];
+        }
+        if (tmin[v] == tmin[2 * v + 1]) {
+            tcount[v] += tcount[2 * v + 1];
+        }
+    }
+
+    static void push(int v) {
+        if (lazy[v] != 0) {
+            tmin[2 * v] += lazy[v];
+            tmin[2 * v + 1] += lazy[v];
+
+            lazy[2 * v] = lazy[v];
+            lazy[2 * v + 1] = lazy[v];
+
+            lazy[v] = 0;
+        }
+    }
+
+    static void update(int v, int tl, int tr, int l, int r, int val) {
+        if (tl >= l && tr <= r) {
+            tmin[v] += val;
+            lazy[v] += val;
+        } else if (tl > r || tr < l) {
+            return;
+        } else {
+            push(v);
+            int mid = (tl + tr) / 2;
+            update(2 * v, tl, mid, l, r, val);
+            update(2 * v + 1, mid + 1, tr, l, r, val);
+            pull(v);
+        }
+    }
+
+    static int queryPoint(int v, int l, int r, int idx) {
+        if (l == idx && r == idx) {
+            return tmin[v];
+        } else {
+            int mid = (l + r) / 2;
+            if (idx <= mid) {
+                return queryPoint(2 * v, l, mid, idx);
+            }
+            return queryPoint(2 * v + 1, mid + 1, r, idx);
+        }
+    }
+
+    static int queryRange(int v, int tl, int tr, int l, int r, int val) {
+        if (tl >= l && tr <= r) {
+            return tmin[v] == val ? tcount[v] : 0;
+        } else if (tl > r || tr < l) {
+            return 0;
+        } else {
+            int mid = (tl + tr) / 2;
+            return queryRange(2 * v, tl, mid, l, r, val) + queryRange(2 * v + 1, mid + 1, tr, l, r, val);
         }
     }
 
     public static void helper() throws IOException {
-        values = new int[n];
-        Arrays.fill(values, 1);
         start = new int[n];
         end = new int[n];
-        lt = new int[n];
         time = -1;
         dfs(0, -1);
 
-        t = new int[4 * n];
+        tmin = new int[4 * n];
+        tcount = new int[4 * n];
         lazy = new int[4 * n];
 
         build(1, 0, n - 1);
 
+        boolean state[] = new boolean[n];
+
         for (int[] query : queries) {
             if (query[0] == 1) {
-                // update(1, )
+                update(1, 0, n - 1, start[query[1]], end[query[1]], state[query[1]] ? -1 : 1);
+                state[query[1]] = !state[query[1]];
             } else {
-
+                int count = queryPoint(1, 0, n - 1, start[query[1]]);
+                println(queryRange(1, 0, n - 1, start[query[1]], end[query[1]], count));
             }
         }
     }
