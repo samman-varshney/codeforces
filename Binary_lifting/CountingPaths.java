@@ -1,7 +1,9 @@
+package Binary_lifting;
+
 import java.util.*;
 import java.io.*;
 
-public class biolerplate {
+public class CountingPaths {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -431,56 +433,29 @@ public class biolerplate {
         bw.flush();
     }
 
-    // ------------------------Binary lifting------------------//
-    static List<List<Integer>> adj;
-    static int[] depth;
-    static int[][] table;
-    static int limit = 17;
-
-    static void dfs(int v, int p, int[] parent) {
-        parent[v] = p;
-        for (int u : adj.get(v)) {
-            if (u != p) {
-                depth[u] = depth[v] + 1;
-                dfs(u, v, parent);
-            }
-        }
-    }
-
-    static void build(int[] parent) {
-        table[0] = Arrays.copyOf(parent, parent.length);
-
-        for (int i = 1; i <= limit; i++) {
-            for (int j = 0; j <= parent.length; j++) {
-                table[i][j] = table[i - 1][table[i - 1][j]];
-            }
-        }
-    }
-
-    static int getKthAncestor(int a, int k) {
-        for (int i = 0; i <= limit; i++) {
-            if ((k & (1 << i)) != 0) {
-                a = table[i][a];
-            }
-        }
-        return a;
-    }
-
-    static void initialiseBL(int n) {
-        int[] parent = new int[n];
-        dfs(0, -1, parent);
-        depth = new int[n];
-        table = new int[limit][n];
-        build(parent);
-    }
-
     // -----------------------------------------------------//
+    static int n, m;
+    static List<List<Integer>> adj;
+    static int[][] paths;
 
     public static void main(String[] args) {
         try {
             int tcase = readInt();
             while (tcase-- > 0) {
+                n = nextInt();
+                m = nextInt();
+                adj = new ArrayList<>();
+                for (int i = 0; i <= n; i++)
+                    adj.add(new ArrayList<>());
+                for (int i = 0; i < n - 1; i++) {
+                    int u = nextInt();
+                    int v = nextInt();
+                    adj.get(u).add(v);
+                    adj.get(v).add(u);
+                }
 
+                paths = read2DArray(m, 2);
+                helper();
             }
         } catch (Exception err) {
             System.err.println("An unexpected error occurred:");
@@ -488,7 +463,41 @@ public class biolerplate {
         }
     }
 
+    static int[] depth;
+    static int[][] dp;
+    static int limit = 17;
+
+    static void dfs(int v, int p) {
+        parent[v] = p;
+        for (int u : adj.get(v)) {
+            if (u != p) {
+                depth[u] = depth[v] + 1;
+                dfs(u, v);
+            }
+        }
+    }
+
+    static void build() {
+        dp[0] = Arrays.copyOf(parent, n + 1);
+
+        for (int i = 1; i <= limit; i++) {
+            for (int j = 0; j <= n; j++) {
+                dp[i][j] = dp[i - 1][dp[i - 1][j]];
+            }
+        }
+    }
+
+    static int getKthAncestor(int a, int k) {
+        for (int i = 0; i <= limit; i++) {
+            if ((k & (1 << i)) != 0) {
+                a = dp[i][a];
+            }
+        }
+        return a;
+    }
+
     public static void helper() throws IOException {
+        depth = new int[n + 1];
 
     }
 }
