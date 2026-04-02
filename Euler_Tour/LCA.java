@@ -1,4 +1,4 @@
-package Ratting2100;
+package Euler_Tour;
 
 import java.util.*;
 import java.io.*;
