@@ -1,7 +1,8 @@
+
 import java.util.*;
 import java.io.*;
 
-public class biolerplate {
+public class C2218 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -437,21 +438,21 @@ public class biolerplate {
     static int[][] table;
     static int limit = 17;
 
-    static void dfs(int v, int p) {
+    static void dfs(int v, int p, int[] parent) {
         parent[v] = p;
         for (int u : adj.get(v)) {
             if (u != p) {
                 depth[u] = depth[v] + 1;
-                dfs(u, v);
+                dfs(u, v, parent);
             }
         }
     }
 
-    static void build() {
+    static void build(int[] parent) {
         table[0] = Arrays.copyOf(parent, parent.length);
 
         for (int i = 1; i <= limit; i++) {
-            for (int j = 0; j < parent.length; j++) {
+            for (int j = 0; j <= parent.length; j++) {
                 table[i][j] = table[i - 1][table[i - 1][j]];
             }
         }
@@ -467,11 +468,11 @@ public class biolerplate {
     }
 
     static void initialiseBL(int n) {
-        parent = new int[n + 1];
-        depth = new int[n + 1];
-        dfs(1, 0);
-        table = new int[limit + 1][n + 1];
-        build();
+        int[] parent = new int[n];
+        depth = new int[n];
+        dfs(0, -1, parent);
+        table = new int[limit][n];
+        build(parent);
     }
 
     // -----------------------------------------------------//
@@ -480,7 +481,25 @@ public class biolerplate {
         try {
             int tcase = readInt();
             while (tcase-- > 0) {
+                int n = nextInt();
+                int[] nums = new int[3 * n];
 
+                for (int i = 0, j = 1; i < n; i++, j += 1) {
+                    nums[i * 3] = j;
+                }
+
+                for (int i = 0, j = n + 1; i < n; i++, j += 2) {
+                    nums[i * 3 + 1] = j;
+                }
+
+                for (int i = 0, j = n + 2; i < n; j += 2, i++) {
+                    nums[i * 3 + 2] = j;
+                }
+
+                for (int num : nums) {
+                    print(num + " ");
+                }
+                println();
             }
         } catch (Exception err) {
             System.err.println("An unexpected error occurred:");

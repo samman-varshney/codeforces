@@ -1,7 +1,9 @@
+package Binary_lifting;
+
 import java.util.*;
 import java.io.*;
 
-public class biolerplate {
+public class E519 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -436,15 +438,18 @@ public class biolerplate {
     static int[] depth;
     static int[][] table;
     static int limit = 17;
+    static int[] nodes;
 
-    static void dfs(int v, int p) {
+    static int dfs(int v, int p) {
         parent[v] = p;
+        nodes[v] = 1;
         for (int u : adj.get(v)) {
             if (u != p) {
                 depth[u] = depth[v] + 1;
-                dfs(u, v);
+                nodes[v] += dfs(u, v);
             }
         }
+        return nodes[v];
     }
 
     static void build() {
@@ -466,21 +471,65 @@ public class biolerplate {
         return a;
     }
 
+    static int getLCA(int a, int b) {
+        if (depth[a] > depth[b]) {
+            int temp = a;
+            a = b;
+            b = temp;
+        }
+
+        int diff = depth[b] - depth[a];
+        b = getKthAncestor(b, diff);
+
+        if (a == b)
+            return a;
+
+        for (int i = limit; i >= 0; i--) {
+            if (table[i][a] != table[i][b]) {
+                a = table[i][a];
+                b = table[i][b];
+            }
+        }
+
+        return parent[b];
+    }
+
     static void initialiseBL(int n) {
-        parent = new int[n + 1];
-        depth = new int[n + 1];
-        dfs(1, 0);
-        table = new int[limit + 1][n + 1];
+        parent = new int[n];
+        depth = new int[n];
+        nodes = new int[n];
+        dfs(0, -1);
+        parent[0] = 0;
+        table = new int[limit + 1][n];
         build();
     }
 
     // -----------------------------------------------------//
+    static int n, q;
+    static int[][] queries;
 
     public static void main(String[] args) {
         try {
-            int tcase = readInt();
+            int tcase = 1;
             while (tcase-- > 0) {
+                n = nextInt();
+                adj = new ArrayList<>();
+                for (int i = 0; i < n; i++) {
+                    adj.add(new ArrayList<>());
+                }
 
+                for (int i = 0; i < n - 1; i++) {
+                    int u = nextInt() - 1;
+                    int v = nextInt() - 1;
+
+                    adj.get(u).add(v);
+                    adj.get(v).add(u);
+                }
+
+                q = nextInt();
+                queries = read2DArray(q, 2);
+
+                helper();
             }
         } catch (Exception err) {
             System.err.println("An unexpected error occurred:");
@@ -489,6 +538,35 @@ public class biolerplate {
     }
 
     public static void helper() throws IOException {
+        initialiseBL(n);
+        // 1 based indexing - 0 based indexing
+        for (int[] query : queries) {
 
+            int a = query[0] - 1;
+            int b = query[1] - 1;
+            if (a == b) {
+                println(nodes[0]);
+                continue;
+            }
+            int c = getLCA(a, b);
+
+            if ((depth[a] + depth[b] - 2 * depth[c]) % 2 != 0) {
+                println(0);
+            } else if (depth[a] == depth[b]) {
+                int diff = depth[b] - depth[c];
+                println(nodes[0] - nodes[getKthAncestor(a, diff - 1)]
+                        - nodes[getKthAncestor(b, diff - 1)]);
+            } else {
+                // cosidering depth o a is greater then b
+                if (depth[b] > depth[a]) {
+                    int temp = b;
+                    b = a;
+                    a = temp;
+                }
+
+                int mid = (depth[a] + depth[b] - 2 * depth[c]) / 2;
+                println(nodes[getKthAncestor(a, mid)] - nodes[getKthAncestor(a, mid - 1)]);
+            }
+        }
     }
 }
