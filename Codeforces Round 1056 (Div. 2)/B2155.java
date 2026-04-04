@@ -1,7 +1,6 @@
 import java.util.*;
 
-public class B
-{
+public class B2155 {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int tcase = sc.nextInt();
@@ -9,29 +8,29 @@ public class B
             int n = sc.nextInt();
             int k = sc.nextInt();
 
-            if(n*n != k && n*n - k < 2){
+            if (n * n != k && n * n - k < 2) {
                 System.out.println("NO");
-            }else{
+            } else {
                 System.out.println("YES");
                 char[][] arr = new char[n][n];
-                for(char[] x: arr)
+                for (char[] x : arr)
                     Arrays.fill(x, 'D');
-                for(int i=0; i<n; i++){
-                    if(i < n-1){
-                        arr[n-1][i] = 'R';
+                for (int i = 0; i < n; i++) {
+                    if (i < n - 1) {
+                        arr[n - 1][i] = 'R';
                     }
                 }
-                arr[n-1][n-1] = 'L';
-                int fullLines = k/n;
-                for(int i=0; i<fullLines; i++){
+                arr[n - 1][n - 1] = 'L';
+                int fullLines = k / n;
+                for (int i = 0; i < fullLines; i++) {
                     Arrays.fill(arr[i], 'U');
                 }
-                int halfLine = k%n;
-                for(int i=0; i<halfLine; i++){
+                int halfLine = k % n;
+                for (int i = 0; i < halfLine; i++) {
                     arr[fullLines][i] = 'U';
                 }
-                for(int i=0; i<n; i++){
-                    for(int j=0; j<n; j++){
+                for (int i = 0; i < n; i++) {
+                    for (int j = 0; j < n; j++) {
                         System.out.print(arr[i][j]);
                     }
                     System.out.println();

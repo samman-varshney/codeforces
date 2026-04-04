@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
-@SuppressWarnings("unused" )
-public class A {
+
+public class B2163 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -148,7 +148,7 @@ public class A {
     // gcd of two numbers
     public static long gcd(long a, long b) {
         while (b != 0) {
-            long temp = b; 
+            long temp = b;
             b = a % b;
             a = temp;
         }
@@ -213,6 +213,7 @@ public class A {
         }
         return arr;
     }
+
     public static int[][] read2DArray(int n, int m) throws IOException {
         int[][] arr = new int[n][m];
         for (int i = 0; i < n; i++) {
@@ -287,7 +288,8 @@ public class A {
 
     public static <T extends Number> int getMSBPosition(T num) {
         long n = num.longValue();
-        if (n == 0) return -1; // No set bit
+        if (n == 0)
+            return -1; // No set bit
 
         int pos = 0;
         while (n > 0) {
@@ -301,8 +303,8 @@ public class A {
         for (T element : list) {
             bw.write(element + " ");
         }
-        bw.newLine(); 
-        bw.flush();   
+        bw.newLine();
+        bw.flush();
     }
 
     public static void println(int x) throws IOException {
@@ -395,41 +397,35 @@ public class A {
             while (tcase-- > 0) {
                 int n = readInt();
                 int[] nums = readIntArray(n);
-                helper(n, nums);
+                String s = readString();
+                helper(n, nums, s.toCharArray());
             }
         } catch (Exception err) {
             System.out.println(err);
         }
     }
 
-    public static void helper(int n, int[] nums) throws IOException {
-        Arrays.sort(nums);
-        for(int i=1; i<=n-1; i+=2){
-            if(nums[i]!=nums[i+1]){
-                println("NO");
-                return;
+    public static void helper(int n, int[] nums, char[] s) throws IOException {
+        if (s[0] == '1' || s[n - 1] == '1') {
+            println("NO");
+            return;
+        }
+        int min = Integer.MAX_VALUE, idx1 = -1;
+        int max = Integer.MIN_VALUE, idx2 = -1;
+        for (int i = 0; i < n; i++) {
+            if (min > nums[i]) {
+                min = nums[i];
+                idx1 = i;
             }
+            if (max < nums[i]) {
+                max = nums[i];
+                idx2 = i;
+            }
+        }
+        if (s[idx1] == '1' || s[idx2] == '1') {
+            println("NO");
+            return;
         }
         println("YES");
     }
 }
-
-// Example
-// InputCopy
-// 5
-// 4
-// 4 2 2 1
-// 4
-// 1 1 1 1
-// 5
-// 1 5 1 5 1
-// 3
-// 1 2 3
-// 5
-// 1 3 2 3 5
-// OutputCopy
-// YES
-// YES
-// YES
-// NO
-// NO

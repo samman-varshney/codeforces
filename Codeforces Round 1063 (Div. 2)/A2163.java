@@ -1,7 +1,8 @@
 import java.util.*;
 import java.io.*;
 
-public class B {
+@SuppressWarnings("unused")
+public class A2163 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -397,35 +398,41 @@ public class B {
             while (tcase-- > 0) {
                 int n = readInt();
                 int[] nums = readIntArray(n);
-                String s = readString();
-                helper(n, nums, s.toCharArray());
+                helper(n, nums);
             }
         } catch (Exception err) {
             System.out.println(err);
         }
     }
 
-    public static void helper(int n, int[] nums, char[] s) throws IOException {
-        if (s[0] == '1' || s[n - 1] == '1') {
-            println("NO");
-            return;
-        }
-        int min = Integer.MAX_VALUE, idx1 = -1;
-        int max = Integer.MIN_VALUE, idx2 = -1;
-        for (int i = 0; i < n; i++) {
-            if (min > nums[i]) {
-                min = nums[i];
-                idx1 = i;
+    public static void helper(int n, int[] nums) throws IOException {
+        Arrays.sort(nums);
+        for (int i = 1; i <= n - 1; i += 2) {
+            if (nums[i] != nums[i + 1]) {
+                println("NO");
+                return;
             }
-            if (max < nums[i]) {
-                max = nums[i];
-                idx2 = i;
-            }
-        }
-        if (s[idx1] == '1' || s[idx2] == '1') {
-            println("NO");
-            return;
         }
         println("YES");
     }
 }
+
+// Example
+// InputCopy
+// 5
+// 4
+// 4 2 2 1
+// 4
+// 1 1 1 1
+// 5
+// 1 5 1 5 1
+// 3
+// 1 2 3
+// 5
+// 1 3 2 3 5
+// OutputCopy
+// YES
+// YES
+// YES
+// NO
+// NO
