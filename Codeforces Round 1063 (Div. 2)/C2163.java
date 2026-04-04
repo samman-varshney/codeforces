@@ -1,7 +1,8 @@
 import java.util.*;
 import java.io.*;
-@SuppressWarnings("unused" )
-public class C {
+
+@SuppressWarnings("unused")
+public class C2163 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -148,7 +149,7 @@ public class C {
     // gcd of two numbers
     public static long gcd(long a, long b) {
         while (b != 0) {
-            long temp = b; 
+            long temp = b;
             b = a % b;
             a = temp;
         }
@@ -213,6 +214,7 @@ public class C {
         }
         return arr;
     }
+
     public static int[][] read2DArray(int n, int m) throws IOException {
         int[][] arr = new int[n][m];
         for (int i = 0; i < n; i++) {
@@ -287,7 +289,8 @@ public class C {
 
     public static <T extends Number> int getMSBPosition(T num) {
         long n = num.longValue();
-        if (n == 0) return -1; // No set bit
+        if (n == 0)
+            return -1; // No set bit
 
         int pos = 0;
         while (n > 0) {
@@ -301,8 +304,8 @@ public class C {
         for (T element : list) {
             bw.write(element + " ");
         }
-        bw.newLine(); 
-        bw.flush();   
+        bw.newLine();
+        bw.flush();
     }
 
     public static void println(int x) throws IOException {
@@ -406,11 +409,11 @@ public class C {
     }
 
     public static void helper(int n, int[][] nums) throws IOException {
-        int[] fmax =new int[n];
+        int[] fmax = new int[n];
         int[] fmin = new int[n];
 
         int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
-        for(int i=0; i<n; i++){
+        for (int i = 0; i < n; i++) {
             fmax[i] = max(max, nums[0][i]);
             fmin[i] = min(min, nums[0][i]);
 
@@ -420,8 +423,9 @@ public class C {
         int[] bmax = new int[n];
         int[] bmin = new int[n];
 
-        min = Integer.MAX_VALUE; max = Integer.MIN_VALUE;
-        for(int i=n-1; i>=0; i--){
+        min = Integer.MAX_VALUE;
+        max = Integer.MIN_VALUE;
+        for (int i = n - 1; i >= 0; i--) {
             bmax[i] = max(max, nums[1][i]);
             bmin[i] = min(min, nums[1][i]);
 
@@ -430,15 +434,16 @@ public class C {
         }
 
         HashMap<Integer, Integer> map = new HashMap<>();
-        for(int i=0; i<n; i++){
+        for (int i = 0; i < n; i++) {
             min = min(fmin[i], bmin[i]);
             max = max(fmax[i], bmax[i]);
             map.put(min, min(map.getOrDefault(min, Integer.MAX_VALUE), max));
         }
 
         long res = 0;
-        for(int key: map.keySet()){;
-            res += (2L*n - map.get(key)+1L)*key;
+        for (int key : map.keySet()) {
+            ;
+            res += (2L * n - map.get(key) + 1L) * key;
         }
         println(res);
     }
