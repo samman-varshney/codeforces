@@ -1,7 +1,9 @@
+package Rating1800;
+
 import java.util.*;
 import java.io.*;
 
-public class biolerplate {
+public class A1083 {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -273,6 +275,7 @@ public class biolerplate {
             bw.write(arr[i] + (i < arr.length - 1 ? " " : ""));
         }
         bw.newLine();
+        bw.flush();
     }
 
     public static void printArray(char[] arr) throws IOException {
@@ -282,6 +285,7 @@ public class biolerplate {
             bw.write(arr[i]);
         }
         bw.newLine();
+        bw.flush();
     }
 
     public static void printArray(long[] arr) throws IOException {
@@ -291,6 +295,7 @@ public class biolerplate {
             bw.write(Long.toString(arr[i]));
         }
         bw.newLine();
+        bw.flush();
     }
 
     public static void printArray(float[] arr) throws IOException {
@@ -300,6 +305,7 @@ public class biolerplate {
             bw.write(Float.toString(arr[i]));
         }
         bw.newLine();
+        bw.flush();
     }
 
     public static void printArray(double[] arr) throws IOException {
@@ -309,6 +315,7 @@ public class biolerplate {
             bw.write(Double.toString(arr[i]));
         }
         bw.newLine();
+        bw.flush();
     }
 
     public static <T> void printArray(T[] arr) throws IOException {
@@ -320,6 +327,7 @@ public class biolerplate {
         }
         bw.write(sb.toString());
         bw.newLine();
+        bw.flush();
     }
 
     public static <T extends Number> int getMSBPosition(T num) {
@@ -340,73 +348,89 @@ public class biolerplate {
             bw.write(element + " ");
         }
         bw.newLine();
+        bw.flush();
     }
 
     public static void println(int x) throws IOException {
         bw.write(Integer.toString(x));
         bw.newLine();
+        bw.flush();
     }
 
     public static void println(long x) throws IOException {
         bw.write(Long.toString(x));
         bw.newLine();
+        bw.flush();
     }
 
     public static void println(float x) throws IOException {
         bw.write(Float.toString(x));
         bw.newLine();
+        bw.flush();
     }
 
     public static void println(double x) throws IOException {
         bw.write(Double.toString(x));
         bw.newLine();
+        bw.flush();
     }
 
     public static void println(char x) throws IOException {
         bw.write(x);
         bw.newLine();
+        bw.flush();
     }
 
     public static void println(boolean x) throws IOException {
         bw.write(Boolean.toString(x));
         bw.newLine();
+        bw.flush();
     }
 
     public static void println() throws IOException {
         bw.newLine();
+        bw.flush();
     }
 
     public static <T> void println(T obj) throws IOException {
         bw.write(obj.toString());
         bw.newLine();
+        bw.flush();
     }
 
     public static void print(int x) throws IOException {
         bw.write(Integer.toString(x));
+        bw.flush();
     }
 
     public static void print(long x) throws IOException {
         bw.write(Long.toString(x));
+        bw.flush();
     }
 
     public static void print(float x) throws IOException {
         bw.write(Float.toString(x));
+        bw.flush();
     }
 
     public static void print(double x) throws IOException {
         bw.write(Double.toString(x));
+        bw.flush();
     }
 
     public static void print(char x) throws IOException {
         bw.write(x);
+        bw.flush();
     }
 
     public static void print(boolean x) throws IOException {
         bw.write(Boolean.toString(x));
+        bw.flush();
     }
 
     public static <T> void print(T obj) throws IOException {
         bw.write(obj.toString());
+        bw.flush();
     }
 
     // ------------------------Binary lifting------------------//
@@ -475,22 +499,68 @@ public class biolerplate {
     }
 
     // -----------------------------------------------------//
+    static int n;
+    static int[] gasoline;
+    static List<List<Tuple>> edge;
 
     public static void main(String[] args) {
         try {
-            int tcase = readInt();
+            int tcase = 1;
             while (tcase-- > 0) {
+                n = nextInt();
+                gasoline = readIntArray(n);
+                edge = new ArrayList<>();
+                for (int i = 0; i <= n; i++)
+                    edge.add(new ArrayList<>());
+                for (int i = 0; i < n - 1; i++) {
+                    int u = nextInt();
+                    int v = nextInt();
+                    int wt = nextInt();
 
+                    edge.get(u).add(new Tuple(v, wt));
+                    edge.get(v).add(new Tuple(u, wt));
+                }
+                helper();
             }
-            bw.flush();
         } catch (Exception err) {
             System.err.println("An unexpected error occurred:");
             err.printStackTrace();
         }
+    }
 
+    static long maximumGasoline;
+
+    static long dfs(int u) {
+        long m1 = gasoline[u - 1], m2 = gasoline[u - 1];
+        for (Tuple t : edge.get(u)) {
+            if (t.v != parent[u]) {
+                parent[t.v] = u;
+                long res = dfs(t.v) - t.wt + gasoline[u - 1];
+                if (m1 < res) {
+                    m2 = m1;
+                    m1 = res;
+                } else if (m2 < res) {
+                    m2 = res;
+                }
+            }
+        }
+        maximumGasoline = max(maximumGasoline, m1 + m2 - gasoline[u - 1]);
+        return m1;
     }
 
     public static void helper() throws IOException {
+        maximumGasoline = 0;
+        parent = new int[n + 1];
+        dfs(1);
+        println(maximumGasoline);
+    }
+}
 
+class Tuple {
+    int v, wt;
+
+    Tuple(int v, int wt) {
+        this.v = v;
+        this.wt = wt;
     }
 }
