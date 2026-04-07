@@ -1,7 +1,9 @@
+package Binary_lifting;
+
 import java.util.*;
 import java.io.*;
 
-public class biolerplate {
+public class TALCA {
 
     // -------------------------Boiler Code----------------------//
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -437,17 +439,17 @@ public class biolerplate {
     static int[][] table;
     static int limit = 17;
 
-    static void dfsBL(int u) {
+    static void dfs(int u) {
         for (int v : adj.get(u)) {
             if (v != parent[u]) {
                 parent[v] = u;
                 depth[v] = depth[u] + 1;
-                dfsBL(v);
+                dfs(v);
             }
         }
     }
 
-    static void buildBL() {
+    static void build() {
         table[0] = Arrays.copyOf(parent, parent.length);
 
         for (int i = 1; i <= limit; i++) {
@@ -464,6 +466,14 @@ public class biolerplate {
             }
         }
         return a;
+    }
+
+    static void initialiseBL(int n) {
+        parent = new int[n + 1];
+        depth = new int[n + 1];
+        dfs(1);
+        table = new int[limit + 1][n + 1];
+        build();
     }
 
     static int getLCA(int a, int b) {
@@ -488,21 +498,28 @@ public class biolerplate {
         return parent[a];
     }
 
-    static void initialiseBL(int n) {
-        parent = new int[n + 1];
-        depth = new int[n + 1];
-        dfsBL(1);
-        table = new int[limit + 1][n + 1];
-        buildBL();
-    }
-
     // -----------------------------------------------------//
+    static int n, m;
+    static int[][] queries;
 
     public static void main(String[] args) {
         try {
-            int tcase = readInt();
+            int tcase = 1;
             while (tcase-- > 0) {
+                n = nextInt();
+                adj = new ArrayList<>();
+                for (int i = 0; i <= n; i++)
+                    adj.add(new ArrayList<>());
 
+                for (int i = 0; i < n - 1; i++) {
+                    int u = nextInt();
+                    int v = nextInt();
+                    adj.get(u).add(v);
+                    adj.get(v).add(u);
+                }
+                m = nextInt();
+                queries = read2DArray(m, 3);
+                helper();
             }
         } catch (Exception err) {
             System.err.println("An unexpected error occurred:");
@@ -511,6 +528,24 @@ public class biolerplate {
     }
 
     public static void helper() throws IOException {
+        initialiseBL(n);
+        for (int[] q : queries) {
+            int r = q[0];
+            int u = q[1];
+            int v = q[2];
 
+            int c1 = getLCA(r, v);
+            int c2 = getLCA(r, u);
+            int c3 = getLCA(u, v);
+
+            if (depth[c1] >= depth[c2] && depth[c1] >= depth[c3]) {
+                println(c1);
+            } else if (depth[c2] >= depth[c1] && depth[c2] >= depth[c3]) {
+                println(c2);
+            } else {
+                println(c3);
+            }
+
+        }
     }
 }

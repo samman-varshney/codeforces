@@ -1,4 +1,4 @@
-package HLD;
+package Binary_lifting;
 
 import java.util.*;
 import java.io.*;
