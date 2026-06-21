@@ -1,4 +1,6 @@
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
 import java.util.Set;
@@ -37,34 +39,39 @@ public class MonuVersion {
         if (!node.inProcess.compareAndSet(0, 1))
             return false;
 
-        if (node.lockedById != -1 || node.lockedDecesndents.size() != 0) {
-            node.inProcess.set(0);
-            return false;
-        }
+        try {
 
-        Node parent = node.parent;
-        Stack<Node> st = new Stack<>();
-        while (parent != null) {
-            parent.lockedDecesndents.add(node);
-            st.add(parent);
-
-            if (parent.lockedById != -1 || parent.inProcess.get() == 1) {
-                // rollback
-                while (!st.isEmpty()) {
-                    st.pop().lockedDecesndents.remove(node);
-                }
-                // doesn't require compare and swap
+            if (node.lockedById != -1 || node.lockedDecesndents.size() != 0) {
                 node.inProcess.set(0);
                 return false;
             }
 
-            parent = parent.parent;
+            Node parent = node.parent;
+            Stack<Node> st = new Stack<>();
+            while (parent != null) {
+                // claim and test
+                parent.lockedDecesndents.add(node);
+                st.add(parent);
+
+                if (parent.lockedById != -1 || parent.inProcess.get() == 1) {
+                    // rollback
+                    while (!st.isEmpty()) {
+                        st.pop().lockedDecesndents.remove(node);
+                    }
+                    // doesn't require compare and swap
+                    node.inProcess.set(0);
+                    return false;
+                }
+
+                parent = parent.parent;
+            }
+
+            node.lockedById = uid;
+
+            return true;
+        } finally {
+            node.inProcess.set(0);
         }
-
-        node.lockedById = uid;
-        node.inProcess.set(0);
-
-        return true;
 
     }
 
@@ -75,22 +82,25 @@ public class MonuVersion {
 
         if (!node.inProcess.compareAndSet(0, 1))
             return false;
-        if (node.lockedById != uid) {
+
+        try {
+            if (node.lockedById != uid) {
+                node.inProcess.set(0);
+                return false;
+            }
+
+            Node parent = node.parent;
+
+            node.lockedById = -1;
+            while (parent != null) {
+                // no need of claim and test
+                parent.lockedDecesndents.remove(node);
+                parent = parent.parent;
+            }
+            return true;
+        } finally {
             node.inProcess.set(0);
-            return false;
         }
-
-        Node parent = node.parent;
-
-        while (parent != null) {
-            parent.lockedDecesndents.remove(node);
-            parent = parent.parent;
-        }
-
-        node.lockedById = -1;
-
-        node.inProcess.set(0);
-        return true;
 
     }
 
@@ -104,25 +114,38 @@ public class MonuVersion {
             return false;
         }
 
-        if (node.lockedById == -1 || node.lockedDecesndents.size() == 0) {
-            node.inProcess.set(0);
-            return false;
-        }
+        try {
 
-        for (Node locked : node.lockedDecesndents) {
-            if (locked.lockedById != uid) {
+            if (node.lockedById != -1 || node.lockedDecesndents.size() == 0) {
                 node.inProcess.set(0);
                 return false;
             }
+
+            for (Node locked : node.lockedDecesndents) {
+                if (locked.lockedById != uid) {
+                    node.inProcess.set(0);
+                    return false;
+                }
+            }
+
+            // first registering the node to ancestors
+            Node parent = node.parent;
+            while (parent != null) {
+                parent.lockedDecesndents.add(node);
+                parent = parent.parent;
+            }
+
+            List<Node> snapshot = new ArrayList<>(node.lockedDecesndents);
+            for (Node locked : snapshot) {
+                unlock(locked.name, uid);
+            }
+
+            node.lockedById = uid;
+            return true;
+        } finally {
+            node.inProcess.set(0);
         }
 
-        for (Node locked : node.lockedDecesndents) {
-            unlock(locked.name, uid);
-        }
-
-        node.lockedById = uid;
-        node.inProcess.set(0);
-        return true;
     }
 
     public static void main(String[] args) {
@@ -131,6 +154,7 @@ public class MonuVersion {
         int m = sc.nextInt();
         int q = sc.nextInt();
 
+        sc.nextLine();
         String[] countries = sc.nextLine().split(" ");
         mapNodes = new ConcurrentHashMap<>();
         buildTree(countries, m);
@@ -169,7 +193,7 @@ public class MonuVersion {
             mapNodes.put(country, curr);
 
             if (!q.isEmpty()) {
-                Node parent = q.poll();
+                Node parent = q.peek();
                 parent.children++;
                 curr.parent = parent;
                 if (parent.children >= m)
