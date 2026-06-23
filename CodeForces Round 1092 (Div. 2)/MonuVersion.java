@@ -36,13 +36,13 @@ public class MonuVersion {
         if (node == null)
             return false;
 
-        if (!node.inProcess.compareAndSet(0, 1))
-            return false;
+        while (!node.inProcess.compareAndSet(0, 1))
+            Thread.yield();
 
         try {
 
             if (node.lockedById != -1 || node.lockedDecesndents.size() != 0) {
-                node.inProcess.set(0);
+
                 return false;
             }
 
@@ -97,6 +97,7 @@ public class MonuVersion {
                 parent.lockedDecesndents.remove(node);
                 parent = parent.parent;
             }
+
             return true;
         } finally {
             node.inProcess.set(0);
@@ -130,8 +131,17 @@ public class MonuVersion {
 
             // first registering the node to ancestors
             Node parent = node.parent;
+            Stack<Node> st = new Stack<>();
             while (parent != null) {
                 parent.lockedDecesndents.add(node);
+                st.push(parent);
+                if (parent.lockedById != -1 || parent.inProcess.get() == 1) {
+                    while (!st.isEmpty()) {
+                        st.pop().lockedDecesndents.remove(node);
+                    }
+                    return false;
+                }
+
                 parent = parent.parent;
             }
 
@@ -142,6 +152,7 @@ public class MonuVersion {
 
             node.lockedById = uid;
             return true;
+
         } finally {
             node.inProcess.set(0);
         }
