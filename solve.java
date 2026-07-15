@@ -1,53 +1,39 @@
-import java.util.Arrays;
-
-class Solution {
-    public int[] maxSumOfThreeSubarrays(int[] nums, int k) {
-
-        int n = nums.length;
-        int[] prefix = new int[n + 1];
-
-        for (int i = 0; i < n; i++)
-            prefix[i + 1] = prefix[i] + nums[i];
-
-        int[][][] dp = new int[n + 1][4][3];
-
-        int result = Integer.MIN_VALUE;
-        int idx = -1;
-
-        for (int i = n - 1; i >= 0; i--) {
-            for (int j = 0; j < 3; j++) {
-                if ((3 - j) * k <= n - i) {
-                    int sum = prefix[i + k] - prefix[i] + dp[i + k][j + 1][0];
-                    if (sum >= dp[i + 1][j][0]) {
-                        dp[i][j][0] = sum;
-                        dp[i][j][1] = i;
-                        dp[i][j][2] = j == 2 ? -1 : dp[i + k][j + 1][1];
-                    } else {
-                        dp[i][j] = dp[i + 1][j];
-                    }
-
-                    if (j == 0 && result <= dp[i][j][0]) {
-                        result = dp[i][j][0];
-                        idx = i;
-                    }
-                }
-
-            }
-        }
-
-        int[] res = new int[3];
-        for (int i = 0; i < 3; i++) {
-            res[i] = idx;
-            idx = dp[idx][i][2];
-        }
-
-        return res;
-    }
-}
-
 public class solve {
     public static void main(String[] args) {
         Solution s = new Solution();
-        System.out.println(Arrays.toString(s.maxSumOfThreeSubarrays(new int[] { 1, 2, 1, 2, 6, 7, 5, 1 }, 2)));
+        System.out.println(s.getSum(new int[] { 1, 2, 3, 2, 1, 5, 6 }));
+    }
+}
+
+class Solution {
+    public long getSum(int[] nums) {
+
+        int n = nums.length;
+        long result = 0;
+
+        for (int i = 0; i < n; i++) {
+
+            // odd length palindrome
+            long sum = nums[i];
+            for (int j = i + 1; j < n; j++) {
+                if (2 * i - j < 0 || nums[2 * i - j] != nums[j])
+                    break;
+                sum += 2 * nums[j];
+            }
+            result = Math.max(result, sum);
+
+            // even length palindrome
+            if (i != n - 1 && nums[i] == nums[i + 1]) {
+                sum = 2 * nums[i];
+                for (int j = i + 2; j < n; j++) {
+                    if (2 * i - j - 1 < 0 || nums[2 * i - j - 1] != nums[j])
+                        break;
+                    sum += 2 * nums[j];
+                }
+                result = Math.max(sum, result);
+            }
+        }
+
+        return result;
     }
 }
